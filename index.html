@@ -81,9 +81,9 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 .rest-legend .dot.sr{background:var(--sr)}
 .rest-legend .dot.lr{background:var(--lr-c)}
 
-.tt{display:none;position:absolute;z-index:200;left:0;top:100%;min-width:260px;max-width:340px;background:#0d1117;border:1px solid #3a3a5a;border-radius:6px;padding:8px 10px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.6)}
-.a:hover .tt{display:block}
-.a.picker-open:hover .tt{display:none}
+.tt{display:none;position:fixed;z-index:200;min-width:260px;max-width:340px;background:#0d1117;border:1px solid #3a3a5a;border-radius:6px;padding:8px 10px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.6)}
+.tt.show{display:block}
+.a.picker-open .tt{display:none!important}
 .tt h3{font-size:14px;color:var(--gold);margin-bottom:2px}
 .tt .mt{font-size:11px;color:var(--acc);margin-bottom:4px}
 .tt p{font-size:13px;line-height:1.4;margin-bottom:3px;color:var(--txt)}
@@ -425,6 +425,34 @@ function spend(btn,lvl){
   openPicker=null;
   sv();
 }
+// Tooltip positioning — flip above if would go below viewport
+document.querySelectorAll('.a').forEach(card=>{
+  const tt=card.querySelector('.tt');
+  if(!tt)return;
+  card.addEventListener('mouseenter',()=>{
+    if(card.classList.contains('picker-open'))return;
+    const r=card.getBoundingClientRect();
+    tt.style.left=r.left+'px';
+    tt.classList.add('show');
+    // Measure after showing
+    const tr=tt.getBoundingClientRect();
+    const below=r.bottom+4;
+    const above=r.top-tr.height-4;
+    if(below+tr.height>window.innerHeight&&above>=0){
+      tt.style.top=above+'px';
+    }else{
+      tt.style.top=below+'px';
+    }
+    // Clamp left
+    if(r.left+tr.width>window.innerWidth){
+      tt.style.left=(window.innerWidth-tr.width-8)+'px';
+    }
+  });
+  card.addEventListener('mouseleave',()=>{
+    tt.classList.remove('show');
+  });
+});
+
 // Close picker on outside click
 document.addEventListener('click',e=>{
   if(openPicker&&!e.target.closest('.a.picker-open')){

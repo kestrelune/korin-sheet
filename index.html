@@ -60,7 +60,8 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 /* Upcastable spells — click to show level picker */
 .a.castable{cursor:pointer}
 .a.castable:hover{border-color:#aa66ff55}
-.a.castable.exhausted{opacity:0.35;pointer-events:none}
+.a.exhausted{opacity:0.35}
+.a.castable.exhausted{pointer-events:none}
 .lvl-pick{display:none;position:absolute;z-index:150;left:0;right:0;top:100%;background:#0d1117;border:1px solid #aa66ff;border-radius:0 0 6px 6px;padding:4px 6px;box-shadow:0 4px 12px rgba(0,0,0,.6)}
 .lvl-pick.show{display:flex;gap:4px;align-items:center}
 .lvl-pick .lp-label{font-size:11px;color:var(--dim)}

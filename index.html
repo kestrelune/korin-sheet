@@ -26,7 +26,7 @@ body {
   font-family: 'Segoe UI', system-ui, sans-serif;
   font-size: 14px;
   padding: 8px;
-  max-width: 480px;
+  max-width: 800px;
   margin: 0 auto;
   -webkit-user-select: none;
   user-select: none;
@@ -253,7 +253,7 @@ body {
 <div class="header">
   <h1>⚔️ Korin Emberfall</h1>
   <div class="subtitle">"The Last Spark of Hope"</div>
-  <div class="class-info">Aasimar Cleric 4 · Icewind Dale</div>
+  <div class="class-info">Aasimar Cleric 4 · Light Domain · Icewind Dale</div>
 </div>
 
 <!-- HP -->
@@ -324,9 +324,21 @@ body {
   <div class="ability buff" onclick="showDetail('channelDivinity')">
     <div class="ability-info">
       <div class="ability-name">🔆 Channel Divinity</div>
-      <div class="ability-brief">Turn Undead / Domain feature</div>
+      <div class="ability-brief">Turn Undead OR Radiance of the Dawn</div>
     </div>
     <div class="uses" id="channelUses">
+      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
+    </div>
+  </div>
+
+  <div class="ability attack" onclick="showDetail('wardingFlare')">
+    <div class="ability-info">
+      <div class="ability-name">💥 Warding Flare</div>
+      <div class="ability-brief">Reaction · Impose disadvantage on attacker</div>
+    </div>
+    <div class="uses" id="wardingFlareUses">
+      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
+      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
       <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
     </div>
   </div>
@@ -403,7 +415,41 @@ body {
 
 <!-- Prepared Spells -->
 <div class="section">
-  <div class="section-title">Prepared Spells (WIS +3 + Lvl 4 = 7 prepared)</div>
+  <div class="section-title">Domain Spells (always prepared — Light)</div>
+
+  <div class="ability attack" onclick="showDetail('burningHands')">
+    <div class="ability-info">
+      <div class="ability-name">🔥 Burning Hands</div>
+      <div class="ability-brief">Self (15ft cone) · DEX save · 3d6 fire</div>
+    </div>
+    <div class="ability-meta">1st</div>
+  </div>
+
+  <div class="ability buff" onclick="showDetail('faerieFire')">
+    <div class="ability-info">
+      <div class="ability-name">✨ Faerie Fire</div>
+      <div class="ability-brief">Conc · 60 ft · DEX save · Advantage on attacks</div>
+    </div>
+    <div class="ability-meta">1st</div>
+  </div>
+
+  <div class="ability attack" onclick="showDetail('flamingSphere')">
+    <div class="ability-info">
+      <div class="ability-name">🔴 Flaming Sphere</div>
+      <div class="ability-brief">Conc · 60 ft · Bonus Action to ram · 2d6 fire</div>
+    </div>
+    <div class="ability-meta">2nd</div>
+  </div>
+
+  <div class="ability attack" onclick="showDetail('scorchingRay')">
+    <div class="ability-info">
+      <div class="ability-name">🔥🔥 Scorching Ray</div>
+      <div class="ability-brief">120 ft · 3 rays · Ranged spell atk · 2d6 fire each</div>
+    </div>
+    <div class="ability-meta">2nd</div>
+  </div>
+
+  <div class="section-title">Prepared Spells (choose 7 — edit as needed)</div>
 
   <div class="ability heal" onclick="showDetail('healingWord')">
     <div class="ability-info">
@@ -448,7 +494,7 @@ body {
   <div class="ability buff" onclick="showDetail('spiritualWeapon')">
     <div class="ability-info">
       <div class="ability-name">⚔️ Spiritual Weapon</div>
-      <div class="ability-brief">Bonus Action · 60 ft · 1d8+3 force</div>
+      <div class="ability-brief">Bonus Action · 60 ft · 1d8+3 force · NOT conc!</div>
     </div>
     <div class="ability-meta">2nd</div>
   </div>
@@ -555,9 +601,37 @@ const details = {
   channelDivinity: {
     title: '🔆 Channel Divinity',
     meta: 'Cleric Feature · Action · 1/Short or Long Rest',
-    body: `<p><b>Turn Undead:</b> Each undead within 30 ft that can see/hear you must make a WIS saving throw (DC 13). On fail, it is turned for 1 minute — must Dash away from you, can't willingly move within 30 ft of you.</p>
-    <p><b>Domain Feature:</b> Your subclass may provide an additional Channel Divinity option. Check your domain!</p>
+    body: `<p>Choose ONE when you use it:</p>
+    <p><b>Turn Undead:</b> Each undead within 30 ft that can see/hear you must make a WIS saving throw (DC 13). On fail, it is turned for 1 minute — must Dash away from you, can't willingly move within 30 ft of you.</p>
+    <p><b>Radiance of the Dawn (Light Domain):</b> As an Action, you present your holy symbol and any magical darkness within 30 ft is dispelled. Each hostile creature within 30 ft must make a CON saving throw (DC 13). On fail: 2d10 + 4 (Cleric level) radiant damage. On success: half damage. Doesn't affect allies!</p>
     <p>Recharges on a Short or Long Rest.</p>`
+  },
+  wardingFlare: {
+    title: '💥 Warding Flare',
+    meta: 'Light Domain · Reaction · WIS mod (3)/Long Rest',
+    body: `<p>When you are attacked by a creature within 30 feet that you can see, you can use your Reaction to impose disadvantage on the attack roll, causing light to flare before the attacker.</p>
+    <p>An attacker that can't be Blinded is immune to this feature.</p>
+    <p>You can use this feature a number of times equal to your WIS modifier (3). You regain all expended uses on a Long Rest.</p>`
+  },
+  burningHands: {
+    title: '🔥 Burning Hands',
+    meta: '1st Level Evocation · V, S · Self (15 ft cone) · Instant',
+    body: `<p>A thin sheet of flames shoots forth from your fingertips. Each creature in a 15-foot cone must make a DEX saving throw (DC 13). On fail: 3d6 fire damage. On success: half damage.</p><p>The fire ignites any flammable objects in the area that aren't being worn or carried.</p><p><b>At Higher Levels:</b> +1d6 per slot above 1st.</p>`
+  },
+  faerieFire: {
+    title: '✨ Faerie Fire',
+    meta: '1st Level Evocation · V · Conc, 1 min · 60 ft (20 ft cube)',
+    body: `<p>Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast must succeed on a DEX saving throw (DC 13) or be outlined too.</p><p>For the duration, objects and affected creatures shed dim light in a 10-foot radius. Any attack roll against an affected creature or object has <b>advantage</b> if the attacker can see it, and the affected creature or object can't benefit from being invisible.</p><p><b>Great against invisible enemies in Icewind Dale!</b></p>`
+  },
+  flamingSphere: {
+    title: '🔴 Flaming Sphere',
+    meta: '2nd Level Evocation · V, S, M · Conc, 1 min · 60 ft',
+    body: `<p>A 5-foot-diameter sphere of fire appears in an unoccupied space within range. Any creature that ends its turn within 5 feet of the sphere must make a DEX saving throw (DC 13): 2d6 fire damage on fail, half on success.</p><p>As a <b>Bonus Action</b>, you can move the sphere up to 30 feet. If you ram it into a creature, that creature makes the save, and the sphere stops.</p><p><b>At Higher Levels:</b> +1d6 per slot above 2nd.</p><p><b>Tip:</b> Uses concentration, so can't pair with Bless or Faerie Fire. But Spiritual Weapon + Flaming Sphere = double bonus action value!</p>`
+  },
+  scorchingRay: {
+    title: '🔥🔥 Scorching Ray',
+    meta: '2nd Level Evocation · V, S · Action · 120 ft',
+    body: `<p>You create three rays of fire and hurl them at targets within range. You can hurl them at one target or several. Make a ranged spell attack (+5) for each ray. On hit: 2d6 fire damage per ray.</p><p><b>At Higher Levels:</b> +1 ray per slot above 2nd.</p><p><b>Max damage:</b> 3 × 2d6 = 6d6 (avg 21) fire damage if all three hit. Your biggest single-turn damage spell right now!</p>`
   },
   celestialResistance: {
     title: '🛡️ Celestial Resistance',

@@ -6,7 +6,7 @@
 <title>Korin Emberfall</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#1a1a2e;--card:#16213e;--ch:#1a2744;--acc:#e94560;--gold:#ffd700;--heal:#00cc88;--blue:#4488ff;--txt:#e0e0e0;--dim:#888;--brd:#2a2a4a;--fire:#ff6622;--react:#ff44aa;--ba:#22ccff}
+:root{--bg:#1a1a2e;--card:#16213e;--ch:#1a2744;--acc:#e94560;--gold:#ffd700;--heal:#00cc88;--blue:#4488ff;--txt:#e0e0e0;--dim:#888;--brd:#2a2a4a;--fire:#ff6622;--react:#ff44aa;--ba:#22ccff;--sr:#4466aa;--lr-c:#44aa66}
 body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;padding:6px;-webkit-user-select:none;user-select:none}
 
 .hdr{display:flex;align-items:center;gap:12px;padding:4px 8px;border-bottom:1px solid var(--brd);margin-bottom:4px}
@@ -35,7 +35,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
 @media(max-width:700px){.grid{grid-template-columns:1fr 1fr}}
 @media(max-width:450px){.grid{grid-template-columns:1fr}}
-.col{display:flex;flex-direction:column;gap:3px}
+.col{display:flex;flex-direction:column;gap:2px}
 
 .sh{font-size:9px;text-transform:uppercase;letter-spacing:1px;padding:2px 0;border-bottom:1px solid var(--brd);margin-bottom:1px;display:flex;align-items:center;gap:4px}
 .sh .tag{font-size:8px;padding:1px 4px;border-radius:3px;font-weight:bold}
@@ -44,38 +44,52 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 .sh .t-react{background:#ff44aa;color:#fff}
 .sh .t-free{background:#888;color:#fff}
 
-.a{background:var(--card);border-radius:4px;padding:3px 5px;cursor:pointer;border-left:3px solid var(--brd);display:flex;align-items:center;gap:4px;min-height:28px;transition:background .1s}
-.a:hover,.a:active{background:var(--ch)}
-.a .ico{font-size:13px;flex-shrink:0}
-.a .n{font-size:11px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.a .d{font-size:8px;color:var(--dim);flex:1}
+/* Cards: compact tile style, 2-up within columns */
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.card-grid .a.wide{grid-column:1/-1}
+
+.a{background:var(--card);border-radius:3px;padding:2px 4px;cursor:default;display:flex;flex-direction:column;justify-content:center;min-height:36px;transition:background .1s;position:relative;border:1px solid transparent}
+.a:hover{background:var(--ch);border-color:#3a3a5a}
+.a .top{display:flex;align-items:center;gap:3px}
+.a .ico{font-size:11px;flex-shrink:0}
+.a .n{font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a .bot{display:flex;align-items:center;gap:3px;margin-top:1px}
 .a .m{font-size:8px;color:var(--dim);white-space:nowrap}
-.a .slot{font-size:8px;padding:1px 3px;border-radius:2px;background:#333;color:#ccc;white-space:nowrap}
-.a.heal{border-left-color:var(--heal)}.a.atk{border-left-color:var(--acc)}.a.buff{border-left-color:var(--blue)}.a.racial{border-left-color:var(--gold)}.a.fire{border-left-color:var(--fire)}.a.react{border-left-color:var(--react)}.a.ba{border-left-color:var(--ba)}
+.a .slot{font-size:7px;padding:0px 3px;border-radius:2px;background:#333;color:#ccc;white-space:nowrap}
+.a .conc{font-size:7px;padding:0px 3px;background:#553300;color:#ffaa00;border-radius:2px;white-space:nowrap}
 
-.pips{display:flex;gap:2px}
-.pip{width:11px;height:11px;border-radius:50%;border:2px solid var(--dim);cursor:pointer}
-.pip.f{background:var(--gold);border-color:var(--gold)}
+/* Pips for uses — short rest = blue, long rest = green */
+.pips{display:flex;gap:2px;margin-left:auto}
+.pip{width:9px;height:9px;border-radius:50%;border:2px solid var(--dim);cursor:pointer}
+.pip.f{border-color:var(--lr-c);background:var(--lr-c)}
+.pip.sr.f{border-color:var(--sr);background:var(--sr)}
+.pip.sr{border-color:var(--sr)}
 
-.conc{font-size:7px;padding:1px 3px;background:#553300;color:#ffaa00;border-radius:2px;white-space:nowrap}
+.rest-legend{display:flex;gap:8px;font-size:8px;color:var(--dim);margin-bottom:2px;align-items:center}
+.rest-legend .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.rest-legend .dot.sr{background:var(--sr)}
+.rest-legend .dot.lr{background:var(--lr-c)}
 
-.sh2{font-size:8px;color:var(--dim);padding:2px 0;margin-top:2px}
+/* Hover tooltip */
+.tt{display:none;position:absolute;z-index:200;left:0;top:100%;min-width:260px;max-width:340px;background:#0d1117;border:1px solid #3a3a5a;border-radius:6px;padding:8px 10px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.6)}
+.a:hover .tt{display:block}
+.tt h3{font-size:12px;color:var(--gold);margin-bottom:2px}
+.tt .mt{font-size:9px;color:var(--acc);margin-bottom:4px}
+.tt p{font-size:11px;line-height:1.4;margin-bottom:3px;color:var(--txt)}
+
+.sh2{font-size:8px;color:var(--dim);padding:1px 0;margin-top:1px;grid-column:1/-1}
 
 .dr{text-align:center;font-size:18px;font-weight:bold;color:var(--gold);min-height:24px;line-height:24px}
 .dice{display:flex;gap:2px;flex-wrap:wrap}
 .db{padding:3px 6px;background:var(--card);border:1px solid var(--brd);border-radius:3px;color:var(--txt);font-size:10px;cursor:pointer}
 .db:active{background:var(--acc)}
 
-.lr{width:100%;padding:5px;background:#1a3a2a;border:1px solid #2a5a3a;border-radius:5px;color:var(--heal);font-size:11px;cursor:pointer;text-align:center;margin-top:4px}
-.lr:active{background:#2a5a3a}
-
-.ov{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.88);z-index:100;padding:16px;overflow-y:auto}
-.ov.show{display:block}
-.dc{background:var(--card);border-radius:8px;padding:14px;max-width:420px;margin:30px auto;border:1px solid var(--brd)}
-.dc h2{font-size:14px;color:var(--gold);margin-bottom:5px}
-.dc .mt{font-size:10px;color:var(--acc);margin-bottom:5px}
-.dc p{font-size:12px;line-height:1.5;margin-bottom:5px}
-.dc .ch{font-size:9px;color:var(--dim);text-align:center;margin-top:6px}
+.rest-btns{display:flex;gap:4px;margin-top:4px}
+.rbtn{flex:1;padding:5px;border-radius:5px;font-size:11px;cursor:pointer;text-align:center;border:none}
+.rbtn.sr-btn{background:#1a2a3a;border:1px solid var(--sr);color:var(--sr)}
+.rbtn.sr-btn:active{background:#2a3a5a}
+.rbtn.lr-btn{background:#1a3a2a;border:1px solid var(--lr-c);color:var(--lr-c)}
+.rbtn.lr-btn:active{background:#2a5a3a}
 </style>
 </head>
 <body>
@@ -117,6 +131,10 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
   <div class="slots"><span class="lbl">2nd:</span>
     <div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div>
   </div>
+  <div class="rest-legend" style="margin-left:12px">
+    <span class="dot sr"></span> Short rest
+    <span class="dot lr"></span> Long rest
+  </div>
 </div>
 
 <div class="grid">
@@ -126,63 +144,202 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
   <div class="sh"><span class="tag t-act">ACTION</span> Your Turn</div>
 
   <div class="sh2">— Cantrips (at will) —</div>
-  <div class="a atk" onclick="sd('sacFlame')"><span class="ico">🔥</span><span class="n">Sacred Flame</span><span class="m">60ft · d8 rad</span></div>
-  <div class="a atk" onclick="sd('tollDead')"><span class="ico">🔔</span><span class="n">Toll the Dead</span><span class="m">60ft · d8/d12</span></div>
-  <div class="a buff" onclick="sd('guidance')"><span class="ico">🙏</span><span class="n">Guidance</span><span class="m">+d4 chk</span><span class="conc">CONC</span></div>
-  <div class="a buff" onclick="sd('resistance')"><span class="ico">🛡️</span><span class="n">Resistance</span><span class="m">+d4 save</span><span class="conc">CONC</span></div>
-  <div class="a buff" onclick="sd('light')"><span class="ico">💡</span><span class="n">Light</span><span class="m">20ft glow</span></div>
+  <div class="card-grid">
+    <div class="a">
+      <div class="top"><span class="ico">🔥</span><span class="n">Sacred Flame</span></div>
+      <div class="bot"><span class="m">60ft · d8 rad · DEX</span></div>
+      <div class="tt"><h3>🔥 Sacred Flame</h3><div class="mt">Cantrip · V,S · 60ft · DEX 13</div><p>1d8 radiant. No cover benefit. 2d8 at level 5.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🔔</span><span class="n">Toll the Dead</span></div>
+      <div class="bot"><span class="m">60ft · d8/d12 · WIS</span></div>
+      <div class="tt"><h3>🔔 Toll the Dead</h3><div class="mt">Cantrip · V,S · 60ft · WIS 13</div><p>1d8 necrotic. <b>1d12 if target missing HP!</b></p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🙏</span><span class="n">Guidance</span></div>
+      <div class="bot"><span class="m">+d4 chk</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>🙏 Guidance</h3><div class="mt">Cantrip · V,S · Touch · Conc 1 min</div><p>+1d4 to one ability check.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🛡️</span><span class="n">Resistance</span></div>
+      <div class="bot"><span class="m">+d4 save</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>🛡️ Resistance</h3><div class="mt">Cantrip · V,S · Touch · Conc 1 min</div><p>+1d4 to one saving throw.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">💡</span><span class="n">Light</span><span class="m" style="margin-left:auto">20ft glow · 1hr</span></div>
+      <div class="tt"><h3>💡 Light</h3><div class="mt">Cantrip · V,M · Touch · 1hr</div><p>Object sheds bright light 20ft + dim 20ft.</p></div>
+    </div>
+  </div>
 
   <div class="sh2">— 1st Level Spells —</div>
-  <div class="a buff" onclick="sd('bane')"><span class="ico">😈</span><span class="n">Bane</span><span class="m">3 tgts · −d4</span><span class="conc">CONC</span></div>
-  <div class="a buff" onclick="sd('bless')"><span class="ico">🙌</span><span class="n">Bless</span><span class="m">3 tgts · +d4</span><span class="conc">CONC</span></div>
-  <div class="a fire" onclick="sd('burnHands')"><span class="ico">🔥</span><span class="n">Burning Hands</span><span class="m">15ft cone · 3d6</span></div>
-  <div class="a buff" onclick="sd('faerie')"><span class="ico">✨</span><span class="n">Faerie Fire</span><span class="m">Adv atks</span><span class="conc">CONC</span></div>
-  <div class="a atk" onclick="sd('guidBolt')"><span class="ico">⚡</span><span class="n">Guiding Bolt</span><span class="m">+5 · 4d6 rad</span></div>
-  <div class="a atk" onclick="sd('inflict')"><span class="ico">💀</span><span class="n">Inflict Wounds</span><span class="m">Touch · +5 · 2d10</span></div>
+  <div class="card-grid">
+    <div class="a">
+      <div class="top"><span class="ico">😈</span><span class="n">Bane</span></div>
+      <div class="bot"><span class="m">3 tgt · −d4</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>😈 Bane</h3><div class="mt">1st · V,S,M · 30ft · CHA 13 · Conc 1 min</div><p>3 creatures subtract 1d4 from attacks and saves on failed save.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🙌</span><span class="n">Bless</span></div>
+      <div class="bot"><span class="m">3 tgt · +d4</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>🙌 Bless</h3><div class="mt">1st · V,S,M · 30ft · Conc 1 min</div><p>3 creatures add 1d4 to attacks and saves. Upcast 2nd: 4 targets.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🔥</span><span class="n">Burning Hands</span></div>
+      <div class="bot"><span class="m">15ft cone · 3d6</span></div>
+      <div class="tt"><h3>🔥 Burning Hands</h3><div class="mt">1st · V,S · 15ft cone · DEX 13</div><p>3d6 fire, half on save. Upcast 2nd: 4d6.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">✨</span><span class="n">Faerie Fire</span></div>
+      <div class="bot"><span class="m">Adv atks</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>✨ Faerie Fire</h3><div class="mt">1st · V · 60ft 20ft cube · DEX 13 · Conc 1 min</div><p>Failed saves: attacks have <b>advantage</b>, can't be invisible. Great in Icewind Dale!</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">⚡</span><span class="n">Guiding Bolt</span></div>
+      <div class="bot"><span class="m">+5 · 4d6 rad</span></div>
+      <div class="tt"><h3>⚡ Guiding Bolt</h3><div class="mt">1st · V,S · 120ft · +5</div><p>4d6 radiant. Next attack vs target has <b>advantage</b>. Upcast 2nd: 5d6.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">💀</span><span class="n">Inflict Wounds</span></div>
+      <div class="bot"><span class="m">Touch · +5 · 2d10</span></div>
+      <div class="tt"><h3>💀 Inflict Wounds</h3><div class="mt">1st · V,S · Touch · +5</div><p>2d10 necrotic. Highest 1st-level single target! Upcast 2nd: 3d10 (avg 16.5).</p></div>
+    </div>
+  </div>
 
   <div class="sh2">— 2nd Level Spells —</div>
-  <div class="a fire" onclick="sd('scorchRay')"><span class="ico">🔥🔥</span><span class="n">Scorching Ray</span><span class="m">3×2d6 fire</span></div>
-  <div class="a buff" onclick="sd('seeInvis')"><span class="ico">👁️</span><span class="n">See Invisibility</span><span class="m">1hr · No conc</span></div>
-  <div class="a heal" onclick="sd('prayer')"><span class="ico">💚</span><span class="n">Prayer of Healing</span><span class="m">10min · 6×2d8</span></div>
+  <div class="card-grid">
+    <div class="a">
+      <div class="top"><span class="ico">🔥🔥</span><span class="n">Scorching Ray</span></div>
+      <div class="bot"><span class="m">3×2d6 fire</span></div>
+      <div class="tt"><h3>🔥🔥 Scorching Ray</h3><div class="mt">2nd · V,S · 120ft · +5 per ray</div><p>3 rays × 2d6 fire. Same or different targets. <b>Max 6d6 (avg 21) single target!</b> Your biggest damage spell.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">👁️</span><span class="n">See Invisibility</span></div>
+      <div class="bot"><span class="m">1hr · No conc</span></div>
+      <div class="tt"><h3>👁️ See Invisibility</h3><div class="mt">2nd · V,S,M · Self · 1hr · NO concentration</div><p>See invisible creatures + Ethereal Plane. No conc = great pre-buff.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">💚</span><span class="n">Prayer of Healing</span><span class="m" style="margin-left:auto">10min · 6×2d8</span></div>
+      <div class="tt"><h3>💚 Prayer of Healing</h3><div class="mt">2nd · V · 10 min · 30ft</div><p>Up to 6 creatures regain 2d8 HP. Out of combat only (10 min cast).</p></div>
+    </div>
+  </div>
 
   <div class="sh2">— Features (Action) —</div>
-  <div class="a racial" onclick="sd('healHands')"><span class="ico">🤲</span><span class="n">Healing Hands</span><span class="m">2d4</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
-  <div class="a buff" onclick="sd('chanDiv')"><span class="ico">🔆</span><span class="n">Channel Divinity</span><span class="m">Turn / Radiance</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+  <div class="card-grid">
+    <div class="a">
+      <div class="top"><span class="ico">🤲</span><span class="n">Healing Hands</span></div>
+      <div class="bot"><span class="m">2d4</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="tt"><h3>🤲 Healing Hands</h3><div class="mt">Magic Action · Touch · 1/Long Rest</div><p>Roll 2d4. Target regains that many HP.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🔆</span><span class="n">Channel Divinity</span></div>
+      <div class="bot"><span class="m">Turn / Radiance</span><div class="pips"><div class="pip sr f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="tt"><h3>🔆 Channel Divinity</h3><div class="mt">Action · 1/Short Rest</div><p><b>Turn Undead:</b> Undead in 30ft WIS save (DC 13) or turned 1 min.</p><p><b>Radiance of the Dawn:</b> Dispels magical darkness 30ft. Hostiles in 30ft CON save (DC 13): <b>2d10+4 radiant</b>. Half on save. <b>Allies unaffected!</b></p></div>
+    </div>
+  </div>
 </div>
 
-<!-- COLUMN 2: BONUS ACTIONS + REACTIONS -->
+<!-- COLUMN 2: BONUS + REACTIONS + UPCAST -->
 <div class="col">
   <div class="sh"><span class="tag t-ba">BONUS</span> Same Turn</div>
 
-  <div class="a ba" onclick="sd('spirWeap')"><span class="ico">⚔️</span><span class="n">Spiritual Weapon</span><span class="m">+5 · d8+3</span><span class="slot">2nd</span></div>
-  <div class="a ba" onclick="sd('spirWeapAtk')"><span class="ico">⚔️</span><span class="n">Spir. Weapon Atk</span><span class="m">Move 20ft + atk</span><span class="slot">FREE</span></div>
-  <div class="a ba" onclick="sd('shield')"><span class="ico">🛡️</span><span class="n">Shield of Faith</span><span class="m">+2 AC</span><span class="conc">CONC</span><span class="slot">1st</span></div>
-  <div class="a ba" onclick="sd('celRev')"><span class="ico">✨</span><span class="n">Celestial Revelation</span><span class="m">1 min · +2 dmg</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+  <div class="card-grid">
+    <div class="a">
+      <div class="top"><span class="ico">⚔️</span><span class="n">Spiritual Weapon</span></div>
+      <div class="bot"><span class="m">+5 · d8+3</span><span class="slot">2nd</span></div>
+      <div class="tt"><h3>⚔️ Spiritual Weapon</h3><div class="mt">2nd · V,S · BA to cast · 60ft · 1 min</div><p>Melee spell atk +5: 1d8+3 force. <b>NOT concentration!</b></p><p>BA each turn: move 20ft + attack.</p><p>Pair with any concentration spell!</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">⚔️</span><span class="n">SW Atk</span></div>
+      <div class="bot"><span class="m">20ft + atk</span><span class="slot">FREE</span></div>
+      <div class="tt"><h3>⚔️ Spiritual Weapon (subsequent)</h3><div class="mt">Bonus Action each turn (already cast)</div><p>Move weapon 20ft + melee spell attack +5: 1d8+3 force. Free damage every turn!</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🛡️</span><span class="n">Shield of Faith</span></div>
+      <div class="bot"><span class="m">+2 AC</span><span class="conc">CONC</span><span class="slot">1st</span></div>
+      <div class="tt"><h3>🛡️ Shield of Faith</h3><div class="mt">1st · V,S,M · BA · 60ft · Conc 10 min</div><p>+2 AC to target. Concentration — can't also run Bless/Bane/Faerie Fire.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">✨</span><span class="n">Celestial Rev.</span></div>
+      <div class="bot"><span class="m">1min · +2 dmg</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="tt"><h3>✨ Celestial Revelation</h3><div class="mt">Bonus Action · 1 min · 1/Long Rest</div><p>Choose one:</p><p><b>Heavenly Wings:</b> Fly speed = walk speed.</p><p><b>Inner Radiance:</b> End of turn, you + allies in 10ft heal 1 HP.</p><p><b>Necrotic Shroud:</b> 10ft enemies CHA save (DC 11) or Frightened. +2 necrotic once/turn.</p><p>All forms: once/turn +2 radiant damage.</p></div>
+    </div>
+  </div>
 
-  <div class="sh" style="margin-top:6px"><span class="tag t-react">REACTION</span> Others' Turns</div>
+  <div class="sh" style="margin-top:4px"><span class="tag t-react">REACTION</span> Others' Turns</div>
 
-  <div class="a react" onclick="sd('wardFlare')"><span class="ico">💥</span><span class="n">Warding Flare</span><span class="m">Disadv on atk</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+  <div class="card-grid">
+    <div class="a wide">
+      <div class="top"><span class="ico">💥</span><span class="n">Warding Flare</span><span class="m" style="margin-left:auto">Disadv on atk</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="tt"><h3>💥 Warding Flare</h3><div class="mt">Reaction · 3/Long Rest</div><p>When attacked by creature within 30ft: <b>impose disadvantage</b> on attack roll. Immune if attacker can't be Blinded.</p></div>
+    </div>
+  </div>
 
-  <div class="sh" style="margin-top:6px"><span class="tag t-free">PASSIVE</span> Always On</div>
+  <div class="sh" style="margin-top:4px"><span class="tag t-free">PASSIVE</span> Always On</div>
 
-  <div class="a racial" onclick="sd('celRes')"><span class="ico">🛡️</span><span class="n">Resist Necro/Radiant</span><span class="m">½ dmg</span></div>
-  <div class="a racial" onclick="sd('darkv')"><span class="ico">👁️</span><span class="n">Darkvision 60ft</span></div>
+  <div class="card-grid">
+    <div class="a">
+      <div class="top"><span class="ico">🛡️</span><span class="n">Resist Nec/Rad</span></div>
+      <div class="bot"><span class="m">½ dmg</span></div>
+      <div class="tt"><h3>🛡️ Celestial Resistance</h3><div class="mt">Passive</div><p>Resistance to necrotic & radiant (half damage).</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">👁️</span><span class="n">Darkvision</span></div>
+      <div class="bot"><span class="m">60ft</span></div>
+      <div class="tt"><h3>👁️ Darkvision</h3><div class="mt">Passive · 60ft</div><p>Dim as bright, dark as dim.</p></div>
+    </div>
+  </div>
 
-  <div class="sh" style="margin-top:6px"><span class="tag t-act">UPCAST</span> 2nd Slot → 1st Spell</div>
-  <div class="a buff" onclick="sd('bless2')"><span class="ico">🙌</span><span class="n">Bless → 4 targets</span><span class="slot">2nd</span></div>
-  <div class="a buff" onclick="sd('bane2')"><span class="ico">😈</span><span class="n">Bane → 4 targets</span><span class="slot">2nd</span></div>
-  <div class="a fire" onclick="sd('burn2')"><span class="ico">🔥</span><span class="n">Burning Hands → 4d6</span><span class="slot">2nd</span></div>
-  <div class="a atk" onclick="sd('guid2')"><span class="ico">⚡</span><span class="n">Guiding Bolt → 5d6</span><span class="slot">2nd</span></div>
-  <div class="a atk" onclick="sd('inflict2')"><span class="ico">💀</span><span class="n">Inflict Wounds → 3d10</span><span class="slot">2nd</span></div>
+  <div class="sh" style="margin-top:4px"><span class="tag t-act">UPCAST</span> 2nd Slot → 1st Spell</div>
+
+  <div class="card-grid">
+    <div class="a">
+      <div class="top"><span class="ico">🙌</span><span class="n">Bless → 4 tgt</span></div>
+      <div class="bot"><span class="slot">2nd</span></div>
+      <div class="tt"><h3>🙌 Bless (upcast)</h3><div class="mt">2nd slot · 4 targets</div><p>Same but 4 creatures instead of 3.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">😈</span><span class="n">Bane → 4 tgt</span></div>
+      <div class="bot"><span class="slot">2nd</span></div>
+      <div class="tt"><h3>😈 Bane (upcast)</h3><div class="mt">2nd slot · 4 targets</div><p>Same but 4 creatures instead of 3.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">🔥</span><span class="n">Burn Hands 4d6</span></div>
+      <div class="bot"><span class="slot">2nd</span></div>
+      <div class="tt"><h3>🔥 Burning Hands (upcast)</h3><div class="mt">2nd slot · 4d6</div><p>15ft cone, 4d6 fire.</p></div>
+    </div>
+    <div class="a">
+      <div class="top"><span class="ico">⚡</span><span class="n">G.Bolt 5d6</span></div>
+      <div class="bot"><span class="slot">2nd</span></div>
+      <div class="tt"><h3>⚡ Guiding Bolt (upcast)</h3><div class="mt">2nd slot · 5d6</div><p>5d6 radiant + advantage on next attack.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">💀</span><span class="n">Inflict Wounds → 3d10</span><span class="m" style="margin-left:auto">avg 16.5</span><span class="slot">2nd</span></div>
+      <div class="tt"><h3>💀 Inflict Wounds (upcast)</h3><div class="mt">2nd slot · 3d10</div><p>3d10 = avg 16.5. Massive single-target.</p></div>
+    </div>
+  </div>
 </div>
 
 <!-- COLUMN 3: COMBOS + DICE + SAVES -->
 <div class="col">
   <div class="sh">⚡ Combat Combos</div>
-  <div class="a" onclick="sd('combo1')" style="border-left-color:var(--gold)"><span class="ico">💡</span><span class="n">Opener: Spir.Weapon + Bless</span><span class="m">T1</span></div>
-  <div class="a" onclick="sd('combo2')" style="border-left-color:var(--gold)"><span class="ico">🔥</span><span class="n">Nova: Scorching Ray + SW atk</span><span class="m">T2+</span></div>
-  <div class="a" onclick="sd('combo3')" style="border-left-color:var(--gold)"><span class="ico">✨</span><span class="n">Faerie Fire + SW + cantrip</span><span class="m">Adv</span></div>
-  <div class="a" onclick="sd('combo4')" style="border-left-color:var(--gold)"><span class="ico">🔆</span><span class="n">Radiance of Dawn (AoE)</span><span class="m">2d10+4</span></div>
+  <div class="card-grid">
+    <div class="a wide">
+      <div class="top"><span class="ico">💡</span><span class="n">Opener: SW + Bless</span><span class="m" style="margin-left:auto">T1</span></div>
+      <div class="tt"><h3>💡 Opener: Spiritual Weapon + Bless</h3><div class="mt">Turn 1 Setup</div><p><b>Action:</b> Cast Bless (conc) on 3 allies → +1d4 atks/saves</p><p><b>Bonus Action:</b> Cast Spiritual Weapon → 1d8+3 force atk</p><p>Now every subsequent turn: cantrip + SW bonus action attack. Costs 1st + 2nd slot.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">🔥</span><span class="n">Nova: Scorch Ray + SW</span><span class="m" style="margin-left:auto">T2+</span></div>
+      <div class="tt"><h3>🔥 Nova: Scorching Ray + SW Attack</h3><div class="mt">Turn 2+ Damage</div><p><b>Action:</b> Scorching Ray → 3 × 2d6 fire (avg 21)</p><p><b>Bonus Action:</b> SW attack → 1d8+3 (avg 7.5)</p><p>Total: avg ~28 damage in one turn. Your max burst.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">✨</span><span class="n">Faerie Fire + SW + cantrip</span><span class="m" style="margin-left:auto">Adv</span></div>
+      <div class="tt"><h3>✨ Control: Faerie Fire + SW + Cantrip</h3><div class="mt">Advantage Enabler</div><p><b>Turn 1:</b> Faerie Fire (conc) + Spiritual Weapon (BA)</p><p><b>Turn 2+:</b> Toll the Dead/Sacred Flame + SW attack (BA)</p><p>Whole party gets advantage on affected targets.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">🔆</span><span class="n">Radiance of Dawn (AoE)</span><span class="m" style="margin-left:auto">2d10+4</span></div>
+      <div class="tt"><h3>🔆 AoE: Radiance of the Dawn</h3><div class="mt">Channel Divinity · Action</div><p>2d10+4 radiant to ALL hostiles in 30ft (avg 15). Dispels magical darkness. Doesn't hurt allies. Use when surrounded.</p></div>
+    </div>
+  </div>
 
   <div class="sh" style="margin-top:4px">🎲 Quick Roll</div>
   <div class="dr" id="dR">—</div>
@@ -218,12 +375,10 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
 </div>
 
-<button class="lr" onclick="longRest()">🌙 Long Rest — Restore All</button>
-
-<div class="ov" id="ov" onclick="hd()">
-<div class="dc" onclick="event.stopPropagation()">
-<h2 id="dT"></h2><div class="mt" id="dM"></div><div id="dB"></div><div class="ch">tap outside to close</div>
-</div></div>
+<div class="rest-btns">
+  <button class="rbtn sr-btn" onclick="shortRest()">⏳ Short Rest</button>
+  <button class="rbtn lr-btn" onclick="longRest()">🌙 Long Rest</button>
+</div>
 
 <script>
 let hp=25;const mx=31;
@@ -232,45 +387,9 @@ function chHP(d){hp=Math.max(0,Math.min(mx,hp+d));upHP();sv()}
 function tSP(e){e.classList.toggle('f');sv()}
 function tP(e){e.classList.toggle('f');sv()}
 function rl(s,c,m){let t=0,r=[];for(let i=0;i<c;i++){const v=Math.floor(Math.random()*s)+1;r.push(v);t+=v}t+=m;const ms=m?`+${m}`:'';const n=c===1&&s===20?(r[0]===20?' NAT 20! 🎉':r[0]===1?' NAT 1 💀':''):'';const e=document.getElementById('dR');e.textContent=`${t} [${r.join('+')}${ms}]${n}`;e.style.color=n.includes('20')?'#0f8':n.includes('1')?'#f44':'#ffd700'}
-function longRest(){hp=mx;upHP();document.querySelectorAll('.sp,.pip').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='🌙 Restored!';document.getElementById('dR').style.color='#0c8';sv()}
+function shortRest(){document.querySelectorAll('.pip.sr').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='⏳ Short Rest!';document.getElementById('dR').style.color='#4466aa';sv()}
+function longRest(){hp=mx;upHP();document.querySelectorAll('.sp,.pip').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='🌙 Full Restore!';document.getElementById('dR').style.color='#0c8';sv()}
 
-const D={
-healHands:{t:'🤲 Healing Hands',m:'Magic Action · Touch · 1/Long Rest',b:'<p>Roll 2d4. Target regains that many HP.</p>'},
-celRev:{t:'✨ Celestial Revelation',m:'Bonus Action · 1 min · 1/Long Rest',b:'<p>Choose one:</p><p><b>Heavenly Wings:</b> Fly speed = walk speed.</p><p><b>Inner Radiance:</b> End of turn, you + allies in 10ft heal 1 HP.</p><p><b>Necrotic Shroud:</b> 10ft enemies CHA save (DC 11) or Frightened. +2 necrotic once/turn.</p><p>All forms: once/turn +2 radiant damage.</p>'},
-chanDiv:{t:'🔆 Channel Divinity',m:'Action · 1/Short Rest',b:'<p><b>Turn Undead:</b> Undead in 30ft WIS save (DC 13) or turned 1 min.</p><p><b>Radiance of the Dawn:</b> Dispels magical darkness 30ft. Hostiles in 30ft CON save (DC 13): <b>2d10+4 radiant</b>. Half on save. <b>Allies unaffected!</b></p>'},
-wardFlare:{t:'💥 Warding Flare',m:'Reaction · 3/Long Rest',b:'<p>When attacked by creature within 30ft: <b>impose disadvantage</b> on attack roll. Immune if attacker can\'t be Blinded.</p>'},
-celRes:{t:'🛡️ Celestial Resistance',m:'Passive',b:'<p>Resistance to necrotic & radiant (half damage).</p>'},
-darkv:{t:'👁️ Darkvision',m:'Passive · 60ft',b:'<p>Dim as bright, dark as dim.</p>'},
-guidance:{t:'🙏 Guidance',m:'Cantrip · V,S · Touch · Conc 1 min',b:'<p>+1d4 to one ability check.</p>'},
-light:{t:'💡 Light',m:'Cantrip · V,M · Touch · 1hr',b:'<p>Object sheds bright light 20ft + dim 20ft.</p>'},
-resistance:{t:'🛡️ Resistance',m:'Cantrip · V,S · Touch · Conc 1 min',b:'<p>+1d4 to one saving throw.</p>'},
-sacFlame:{t:'🔥 Sacred Flame',m:'Cantrip · V,S · 60ft · DEX 13',b:'<p>1d8 radiant. No cover benefit. 2d8 at level 5.</p>'},
-tollDead:{t:'🔔 Toll the Dead',m:'Cantrip · V,S · 60ft · WIS 13',b:'<p>1d8 necrotic. <b>1d12 if target missing HP!</b></p>'},
-bane:{t:'😈 Bane',m:'1st · V,S,M · 30ft · CHA 13 · Conc 1 min',b:'<p>3 creatures subtract 1d4 from attacks and saves on failed save.</p>'},
-bless:{t:'🙌 Bless',m:'1st · V,S,M · 30ft · Conc 1 min',b:'<p>3 creatures add 1d4 to attacks and saves. Upcast 2nd: 4 targets.</p>'},
-burnHands:{t:'🔥 Burning Hands',m:'1st · V,S · 15ft cone · DEX 13',b:'<p>3d6 fire, half on save. Upcast 2nd: 4d6.</p>'},
-faerie:{t:'✨ Faerie Fire',m:'1st · V · 60ft 20ft cube · DEX 13 · Conc 1 min',b:'<p>Failed saves: attacks have <b>advantage</b>, can\'t be invisible. Great in Icewind Dale!</p>'},
-guidBolt:{t:'⚡ Guiding Bolt',m:'1st · V,S · 120ft · +5',b:'<p>4d6 radiant. Next attack vs target has <b>advantage</b>. Upcast 2nd: 5d6.</p>'},
-inflict:{t:'💀 Inflict Wounds',m:'1st · V,S · Touch · +5',b:'<p>2d10 necrotic. Highest 1st-level single target! Upcast 2nd: 3d10 (avg 16.5).</p>'},
-scorchRay:{t:'🔥🔥 Scorching Ray',m:'2nd · V,S · 120ft · +5 per ray',b:'<p>3 rays × 2d6 fire. Same or different targets. <b>Max 6d6 (avg 21) single target!</b> Your biggest damage spell.</p>'},
-seeInvis:{t:'👁️ See Invisibility',m:'2nd · V,S,M · Self · 1hr · NO concentration',b:'<p>See invisible creatures + Ethereal Plane. No conc = great pre-buff.</p>'},
-prayer:{t:'💚 Prayer of Healing',m:'2nd · V · 10 min · 30ft',b:'<p>Up to 6 creatures regain 2d8 HP. Out of combat only (10 min cast).</p>'},
-spirWeap:{t:'⚔️ Spiritual Weapon',m:'2nd · V,S · BA to cast · 60ft · 1 min',b:'<p>Melee spell atk +5: 1d8+3 force. <b>NOT concentration!</b></p><p>BA each turn: move 20ft + attack.</p><p>Pair with any concentration spell!</p>'},
-spirWeapAtk:{t:'⚔️ Spiritual Weapon (subsequent)',m:'Bonus Action each turn (already cast)',b:'<p>Move weapon 20ft + melee spell attack +5: 1d8+3 force. This is your free damage every turn after casting!</p>'},
-shield:{t:'🛡️ Shield of Faith',m:'1st · V,S,M · BA · 60ft · Conc 10 min',b:'<p>+2 AC to target. Concentration — can\'t also run Bless/Bane/Faerie Fire.</p>'},
-bless2:{t:'🙌 Bless (upcast)',m:'2nd slot · 4 targets',b:'<p>Same but 4 creatures instead of 3.</p>'},
-bane2:{t:'😈 Bane (upcast)',m:'2nd slot · 4 targets',b:'<p>Same but 4 creatures instead of 3.</p>'},
-burn2:{t:'🔥 Burning Hands (upcast)',m:'2nd slot · 4d6',b:'<p>15ft cone, 4d6 fire.</p>'},
-guid2:{t:'⚡ Guiding Bolt (upcast)',m:'2nd slot · 5d6',b:'<p>5d6 radiant + advantage on next attack.</p>'},
-inflict2:{t:'💀 Inflict Wounds (upcast)',m:'2nd slot · 3d10',b:'<p>3d10 = avg 16.5. Massive single-target.</p>'},
-combo1:{t:'💡 Opener: Spiritual Weapon + Bless',m:'Turn 1 Setup',b:'<p><b>Action:</b> Cast Bless (conc) on 3 allies → +1d4 atks/saves</p><p><b>Bonus Action:</b> Cast Spiritual Weapon → 1d8+3 force atk</p><p>Now every subsequent turn: cantrip + SW bonus action attack. Bless keeps buffing the party. Costs 1st + 2nd slot.</p>'},
-combo2:{t:'🔥 Nova: Scorching Ray + SW Attack',m:'Turn 2+ Damage',b:'<p><b>Action:</b> Scorching Ray → 3 × 2d6 fire (avg 21)</p><p><b>Bonus Action:</b> Spiritual Weapon attack → 1d8+3 (avg 7.5)</p><p>Total: avg ~28 damage in one turn. Your max burst.</p>'},
-combo3:{t:'✨ Control: Faerie Fire + SW + Cantrip',m:'Advantage Enabler',b:'<p><b>Turn 1:</b> Faerie Fire (conc) + Spiritual Weapon (BA)</p><p><b>Turn 2+:</b> Toll the Dead/Sacred Flame (action) + SW attack (BA)</p><p>Whole party gets advantage on affected targets. You still deal damage every turn.</p>'},
-combo4:{t:'🔆 AoE: Radiance of the Dawn',m:'Channel Divinity · Action',b:'<p><b>Action:</b> Radiance of the Dawn → 2d10+4 radiant to ALL hostiles in 30ft (avg 15)</p><p>Dispels magical darkness. Doesn\'t hurt allies. Use when surrounded.</p><p>Pairs with Spiritual Weapon (BA) same turn for bonus damage.</p>'},
-};
-
-function sd(k){const d=D[k];if(!d)return;document.getElementById('dT').textContent=d.t;document.getElementById('dM').textContent=d.m;document.getElementById('dB').innerHTML=d.b;document.getElementById('ov').classList.add('show')}
-function hd(){document.getElementById('ov').classList.remove('show')}
 function sv(){const s=[...document.querySelectorAll('.sp')].map(p=>p.classList.contains('f'));const p=[...document.querySelectorAll('.pip')].map(p=>p.classList.contains('f'));localStorage.setItem('korin',JSON.stringify({hp,s,p}))}
 function ld(){const r=localStorage.getItem('korin');if(!r)return;try{const d=JSON.parse(r);if(d.hp!==undefined)hp=d.hp;if(d.s)document.querySelectorAll('.sp').forEach((p,i)=>{if(d.s[i]!==undefined)p.classList.toggle('f',d.s[i])});if(d.p)document.querySelectorAll('.pip').forEach((p,i)=>{if(d.p[i]!==undefined)p.classList.toggle('f',d.p[i])})}catch(e){}}
 ld();upHP();

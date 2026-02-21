@@ -44,7 +44,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 .sh .t-react{background:#ff44aa;color:#fff}
 .sh .t-free{background:#888;color:#fff}
 
-/* Cards: compact tile style, 2-up within columns */
 .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 .card-grid .a.wide{grid-column:1/-1}
 
@@ -52,13 +51,25 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 .a:hover{background:var(--ch);border-color:#3a3a5a}
 .a .top{display:flex;align-items:center;gap:3px}
 .a .ico{font-size:11px;flex-shrink:0}
-.a .n{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a .n{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .a .bot{display:flex;align-items:center;gap:3px;margin-top:1px}
-.a .m{font-size:10px;color:var(--dim);white-space:nowrap}
+.a .m{font-size:12px;color:var(--dim);white-space:nowrap}
 .a .slot{font-size:9px;padding:0px 3px;border-radius:2px;background:#333;color:#ccc;white-space:nowrap}
 .a .conc{font-size:9px;padding:0px 3px;background:#553300;color:#ffaa00;border-radius:2px;white-space:nowrap}
 
-/* Pips for uses — short rest = blue, long rest = green */
+/* Upcastable spells — click to show level picker */
+.a.castable{cursor:pointer}
+.a.castable:hover{border-color:#aa66ff55}
+.lvl-pick{display:none;position:absolute;z-index:150;left:0;right:0;top:100%;background:#0d1117;border:1px solid #aa66ff;border-radius:0 0 6px 6px;padding:4px 6px;box-shadow:0 4px 12px rgba(0,0,0,.6)}
+.lvl-pick.show{display:flex;gap:4px;align-items:center}
+.lvl-pick .lp-label{font-size:11px;color:var(--dim)}
+.lvl-pick .lp-btn{padding:3px 8px;border-radius:3px;border:1px solid #aa66ff;background:transparent;color:#aa66ff;font-size:11px;cursor:pointer;font-weight:600}
+.lvl-pick .lp-btn:hover{background:#aa66ff33}
+.lvl-pick .lp-btn.active{background:#aa66ff;color:#000}
+.lvl-pick .lp-info{font-size:11px;color:var(--gold);margin-left:auto}
+.cast-flash{animation:cflash .4s ease}
+@keyframes cflash{0%{background:#aa66ff44}100%{background:var(--card)}}
+
 .pips{display:flex;gap:2px;margin-left:auto}
 .pip{width:9px;height:9px;border-radius:50%;border:2px solid var(--dim);cursor:pointer}
 .pip.f{border-color:var(--lr-c);background:var(--lr-c)}
@@ -70,9 +81,9 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 .rest-legend .dot.sr{background:var(--sr)}
 .rest-legend .dot.lr{background:var(--lr-c)}
 
-/* Hover tooltip */
 .tt{display:none;position:absolute;z-index:200;left:0;top:100%;min-width:260px;max-width:340px;background:#0d1117;border:1px solid #3a3a5a;border-radius:6px;padding:8px 10px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.6)}
 .a:hover .tt{display:block}
+.a.picker-open:hover .tt{display:none}
 .tt h3{font-size:14px;color:var(--gold);margin-bottom:2px}
 .tt .mt{font-size:11px;color:var(--acc);margin-bottom:4px}
 .tt p{font-size:13px;line-height:1.4;margin-bottom:3px;color:var(--txt)}
@@ -126,10 +137,10 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
 <div class="slots-row">
   <div class="slots"><span class="lbl">1st:</span>
-    <div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div>
+    <div class="sp f" data-lvl="1" onclick="tSP(this)"></div><div class="sp f" data-lvl="1" onclick="tSP(this)"></div><div class="sp f" data-lvl="1" onclick="tSP(this)"></div><div class="sp f" data-lvl="1" onclick="tSP(this)"></div>
   </div>
   <div class="slots"><span class="lbl">2nd:</span>
-    <div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div>
+    <div class="sp f" data-lvl="2" onclick="tSP(this)"></div><div class="sp f" data-lvl="2" onclick="tSP(this)"></div><div class="sp f" data-lvl="2" onclick="tSP(this)"></div>
   </div>
   <div class="rest-legend" style="margin-left:12px">
     <span class="dot sr"></span> Short rest
@@ -173,53 +184,73 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
   <div class="sh2">— 1st Level Spells —</div>
   <div class="card-grid">
-    <div class="a">
+    <div class="a castable" data-spell="bane" onclick="castSpell(this)">
       <div class="top"><span class="ico">😈</span><span class="n">Bane</span></div>
-      <div class="bot"><span class="m">3 tgt · −d4</span><span class="conc">CONC</span></div>
-      <div class="tt"><h3>😈 Bane</h3><div class="mt">1st · V,S,M · 30ft · CHA 13 · Conc 1 min</div><p>3 creatures subtract 1d4 from attacks and saves on failed save.</p></div>
+      <div class="bot"><span class="m" data-base="3 tgt · −d4" data-up="4 tgt · −d4">3 tgt · −d4</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>😈 Bane</h3><div class="mt">1st · V,S,M · 30ft · CHA 13 · Conc 1 min</div><p>3 creatures subtract 1d4 from attacks and saves.</p><p><b>Upcast 2nd:</b> 4 targets.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a">
+    <div class="a castable" data-spell="bless" onclick="castSpell(this)">
       <div class="top"><span class="ico">🙌</span><span class="n">Bless</span></div>
-      <div class="bot"><span class="m">3 tgt · +d4</span><span class="conc">CONC</span></div>
-      <div class="tt"><h3>🙌 Bless</h3><div class="mt">1st · V,S,M · 30ft · Conc 1 min</div><p>3 creatures add 1d4 to attacks and saves. Upcast 2nd: 4 targets.</p></div>
+      <div class="bot"><span class="m" data-base="3 tgt · +d4" data-up="4 tgt · +d4">3 tgt · +d4</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>🙌 Bless</h3><div class="mt">1st · V,S,M · 30ft · Conc 1 min</div><p>3 creatures add 1d4 to attacks and saves.</p><p><b>Upcast 2nd:</b> 4 targets.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a">
+    <div class="a castable" data-spell="burnHands" onclick="castSpell(this)">
       <div class="top"><span class="ico">🔥</span><span class="n">Burning Hands</span></div>
-      <div class="bot"><span class="m">15ft cone · 3d6</span></div>
-      <div class="tt"><h3>🔥 Burning Hands</h3><div class="mt">1st · V,S · 15ft cone · DEX 13</div><p>3d6 fire, half on save. Upcast 2nd: 4d6.</p></div>
+      <div class="bot"><span class="m" data-base="15ft cone · 3d6" data-up="15ft cone · 4d6">15ft cone · 3d6</span></div>
+      <div class="tt"><h3>🔥 Burning Hands</h3><div class="mt">1st · V,S · 15ft cone · DEX 13</div><p>3d6 fire, half on save.</p><p><b>Upcast 2nd:</b> 4d6.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a">
+    <div class="a castable" data-spell="faerie" onclick="castSpell(this)">
       <div class="top"><span class="ico">✨</span><span class="n">Faerie Fire</span></div>
-      <div class="bot"><span class="m">Adv atks</span><span class="conc">CONC</span></div>
-      <div class="tt"><h3>✨ Faerie Fire</h3><div class="mt">1st · V · 60ft 20ft cube · DEX 13 · Conc 1 min</div><p>Failed saves: attacks have <b>advantage</b>, can't be invisible. Great in Icewind Dale!</p></div>
+      <div class="bot"><span class="m">Adv atks · 20ft</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>✨ Faerie Fire</h3><div class="mt">1st · V · 60ft 20ft cube · DEX 13 · Conc 1 min</div><p>Failed saves: attacks have <b>advantage</b>, can't be invisible.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><span class="lp-info"></span></div>
     </div>
-    <div class="a">
+    <div class="a castable" data-spell="guidBolt" onclick="castSpell(this)">
       <div class="top"><span class="ico">⚡</span><span class="n">Guiding Bolt</span></div>
-      <div class="bot"><span class="m">+5 · 4d6 rad</span></div>
-      <div class="tt"><h3>⚡ Guiding Bolt</h3><div class="mt">1st · V,S · 120ft · +5</div><p>4d6 radiant. Next attack vs target has <b>advantage</b>. Upcast 2nd: 5d6.</p></div>
+      <div class="bot"><span class="m" data-base="+5 · 4d6 rad" data-up="+5 · 5d6 rad">+5 · 4d6 rad</span></div>
+      <div class="tt"><h3>⚡ Guiding Bolt</h3><div class="mt">1st · V,S · 120ft · +5</div><p>4d6 radiant. Next attack vs target has <b>advantage</b>.</p><p><b>Upcast 2nd:</b> 5d6.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a">
+    <div class="a castable" data-spell="inflict" onclick="castSpell(this)">
       <div class="top"><span class="ico">💀</span><span class="n">Inflict Wounds</span></div>
-      <div class="bot"><span class="m">Touch · +5 · 2d10</span></div>
-      <div class="tt"><h3>💀 Inflict Wounds</h3><div class="mt">1st · V,S · Touch · +5</div><p>2d10 necrotic. Highest 1st-level single target! Upcast 2nd: 3d10 (avg 16.5).</p></div>
+      <div class="bot"><span class="m" data-base="Touch · +5 · 2d10" data-up="Touch · +5 · 3d10">Touch · +5 · 2d10</span></div>
+      <div class="tt"><h3>💀 Inflict Wounds</h3><div class="mt">1st · V,S · Touch · +5</div><p>2d10 necrotic. Highest 1st-level single target!</p><p><b>Upcast 2nd:</b> 3d10 (avg 16.5).</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
+    </div>
+    <div class="a castable" data-spell="shield" onclick="castSpell(this)">
+      <div class="top"><span class="ico">🛡️</span><span class="n">Shield of Faith</span></div>
+      <div class="bot"><span class="m">+2 AC</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>🛡️ Shield of Faith</h3><div class="mt">1st · V,S,M · BA · 60ft · Conc 10 min</div><p>+2 AC to target. <b>Bonus action to cast.</b></p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><span class="lp-info"></span></div>
     </div>
   </div>
 
   <div class="sh2">— 2nd Level Spells —</div>
   <div class="card-grid">
-    <div class="a">
+    <div class="a castable" data-spell="scorchRay" onclick="castSpell(this)">
       <div class="top"><span class="ico">🔥🔥</span><span class="n">Scorching Ray</span></div>
       <div class="bot"><span class="m">3×2d6 fire</span></div>
-      <div class="tt"><h3>🔥🔥 Scorching Ray</h3><div class="mt">2nd · V,S · 120ft · +5 per ray</div><p>3 rays × 2d6 fire. Same or different targets. <b>Max 6d6 (avg 21) single target!</b> Your biggest damage spell.</p></div>
+      <div class="tt"><h3>🔥🔥 Scorching Ray</h3><div class="mt">2nd · V,S · 120ft · +5 per ray</div><p>3 rays × 2d6 fire. <b>Max 6d6 (avg 21) single target!</b></p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a">
+    <div class="a castable" data-spell="seeInvis" onclick="castSpell(this)">
       <div class="top"><span class="ico">👁️</span><span class="n">See Invisibility</span></div>
       <div class="bot"><span class="m">1hr · No conc</span></div>
-      <div class="tt"><h3>👁️ See Invisibility</h3><div class="mt">2nd · V,S,M · Self · 1hr · NO concentration</div><p>See invisible creatures + Ethereal Plane. No conc = great pre-buff.</p></div>
+      <div class="tt"><h3>👁️ See Invisibility</h3><div class="mt">2nd · V,S,M · Self · 1hr · NO concentration</div><p>See invisible creatures + Ethereal Plane.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a wide">
+    <div class="a castable wide" data-spell="prayer" onclick="castSpell(this)">
       <div class="top"><span class="ico">💚</span><span class="n">Prayer of Healing</span><span class="m" style="margin-left:auto">10min · 6×2d8</span></div>
-      <div class="tt"><h3>💚 Prayer of Healing</h3><div class="mt">2nd · V · 10 min · 30ft</div><p>Up to 6 creatures regain 2d8 HP. Out of combat only (10 min cast).</p></div>
+      <div class="tt"><h3>💚 Prayer of Healing</h3><div class="mt">2nd · V · 10 min · 30ft</div><p>Up to 6 creatures regain 2d8 HP. Out of combat only.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
+    </div>
+    <div class="a castable wide" data-spell="spirWeap" onclick="castSpell(this)">
+      <div class="top"><span class="ico">⚔️</span><span class="n">Spiritual Weapon</span><span class="m" style="margin-left:auto">BA · +5 · d8+3 · No conc</span></div>
+      <div class="tt"><h3>⚔️ Spiritual Weapon</h3><div class="mt">2nd · V,S · BA to cast · 60ft · 1 min</div><p>Melee spell atk +5: 1d8+3 force. <b>NOT concentration!</b></p><p>BA each turn: move 20ft + attack. Pair with any conc spell!</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
   </div>
 
@@ -233,35 +264,24 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
     <div class="a">
       <div class="top"><span class="ico">🔆</span><span class="n">Channel Divinity</span></div>
       <div class="bot"><span class="m">Turn / Radiance</span><div class="pips"><div class="pip sr f" onclick="event.stopPropagation();tP(this)"></div></div></div>
-      <div class="tt"><h3>🔆 Channel Divinity</h3><div class="mt">Action · 1/Short Rest</div><p><b>Turn Undead:</b> Undead in 30ft WIS save (DC 13) or turned 1 min.</p><p><b>Radiance of the Dawn:</b> Dispels magical darkness 30ft. Hostiles in 30ft CON save (DC 13): <b>2d10+4 radiant</b>. Half on save. <b>Allies unaffected!</b></p></div>
+      <div class="tt"><h3>🔆 Channel Divinity</h3><div class="mt">Action · 1/Short Rest</div><p><b>Turn Undead:</b> 30ft WIS save or turned 1 min.</p><p><b>Radiance of the Dawn:</b> 30ft CON save: <b>2d10+4 radiant</b>. Half on save. <b>Allies unaffected!</b></p></div>
     </div>
   </div>
 </div>
 
-<!-- COLUMN 2: BONUS + REACTIONS + UPCAST -->
+<!-- COLUMN 2: BONUS + REACTIONS -->
 <div class="col">
   <div class="sh"><span class="tag t-ba">BONUS</span> Same Turn</div>
 
   <div class="card-grid">
-    <div class="a">
-      <div class="top"><span class="ico">⚔️</span><span class="n">Spiritual Weapon</span></div>
-      <div class="bot"><span class="m">+5 · d8+3</span><span class="slot">2nd</span></div>
-      <div class="tt"><h3>⚔️ Spiritual Weapon</h3><div class="mt">2nd · V,S · BA to cast · 60ft · 1 min</div><p>Melee spell atk +5: 1d8+3 force. <b>NOT concentration!</b></p><p>BA each turn: move 20ft + attack.</p><p>Pair with any concentration spell!</p></div>
-    </div>
-    <div class="a">
-      <div class="top"><span class="ico">⚔️</span><span class="n">SW Atk</span></div>
-      <div class="bot"><span class="m">20ft + atk</span><span class="slot">FREE</span></div>
-      <div class="tt"><h3>⚔️ Spiritual Weapon (subsequent)</h3><div class="mt">Bonus Action each turn (already cast)</div><p>Move weapon 20ft + melee spell attack +5: 1d8+3 force. Free damage every turn!</p></div>
-    </div>
-    <div class="a">
-      <div class="top"><span class="ico">🛡️</span><span class="n">Shield of Faith</span></div>
-      <div class="bot"><span class="m">+2 AC</span><span class="conc">CONC</span><span class="slot">1st</span></div>
-      <div class="tt"><h3>🛡️ Shield of Faith</h3><div class="mt">1st · V,S,M · BA · 60ft · Conc 10 min</div><p>+2 AC to target. Concentration — can't also run Bless/Bane/Faerie Fire.</p></div>
+    <div class="a wide">
+      <div class="top"><span class="ico">⚔️</span><span class="n">SW Atk (subsequent)</span><span class="m" style="margin-left:auto">20ft move + d8+3</span></div>
+      <div class="tt"><h3>⚔️ Spiritual Weapon Attack</h3><div class="mt">Bonus Action each turn (already cast)</div><p>Move weapon 20ft + melee spell attack +5: 1d8+3 force. Free damage every turn!</p></div>
     </div>
     <div class="a">
       <div class="top"><span class="ico">✨</span><span class="n">Celestial Rev.</span></div>
       <div class="bot"><span class="m">1min · +2 dmg</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
-      <div class="tt"><h3>✨ Celestial Revelation</h3><div class="mt">Bonus Action · 1 min · 1/Long Rest</div><p>Choose one:</p><p><b>Heavenly Wings:</b> Fly speed = walk speed.</p><p><b>Inner Radiance:</b> End of turn, you + allies in 10ft heal 1 HP.</p><p><b>Necrotic Shroud:</b> 10ft enemies CHA save (DC 11) or Frightened. +2 necrotic once/turn.</p><p>All forms: once/turn +2 radiant damage.</p></div>
+      <div class="tt"><h3>✨ Celestial Revelation</h3><div class="mt">Bonus Action · 1 min · 1/Long Rest</div><p><b>Heavenly Wings:</b> Fly speed = walk speed.</p><p><b>Inner Radiance:</b> End of turn, you + allies in 10ft heal 1 HP.</p><p><b>Necrotic Shroud:</b> 10ft CHA save or Frightened. +2 necrotic once/turn.</p><p>All forms: once/turn +2 radiant damage.</p></div>
     </div>
   </div>
 
@@ -269,7 +289,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
   <div class="card-grid">
     <div class="a wide">
-      <div class="top"><span class="ico">💥</span><span class="n">Warding Flare</span><span class="m" style="margin-left:auto">Disadv on atk</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="top"><span class="ico">💥</span><span class="n">Warding Flare</span><span class="m" style="margin-left:auto">Disadv on atk · 30ft</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
       <div class="tt"><h3>💥 Warding Flare</h3><div class="mt">Reaction · 3/Long Rest</div><p>When attacked by creature within 30ft: <b>impose disadvantage</b> on attack roll. Immune if attacker can't be Blinded.</p></div>
     </div>
   </div>
@@ -289,59 +309,30 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
     </div>
   </div>
 
-  <div class="sh" style="margin-top:4px"><span class="tag t-act">UPCAST</span> 2nd Slot → 1st Spell</div>
-
+  <div class="sh" style="margin-top:6px">⚡ Combat Combos</div>
   <div class="card-grid">
-    <div class="a">
-      <div class="top"><span class="ico">🙌</span><span class="n">Bless → 4 tgt</span></div>
-      <div class="bot"><span class="slot">2nd</span></div>
-      <div class="tt"><h3>🙌 Bless (upcast)</h3><div class="mt">2nd slot · 4 targets</div><p>Same but 4 creatures instead of 3.</p></div>
-    </div>
-    <div class="a">
-      <div class="top"><span class="ico">😈</span><span class="n">Bane → 4 tgt</span></div>
-      <div class="bot"><span class="slot">2nd</span></div>
-      <div class="tt"><h3>😈 Bane (upcast)</h3><div class="mt">2nd slot · 4 targets</div><p>Same but 4 creatures instead of 3.</p></div>
-    </div>
-    <div class="a">
-      <div class="top"><span class="ico">🔥</span><span class="n">Burn Hands 4d6</span></div>
-      <div class="bot"><span class="slot">2nd</span></div>
-      <div class="tt"><h3>🔥 Burning Hands (upcast)</h3><div class="mt">2nd slot · 4d6</div><p>15ft cone, 4d6 fire.</p></div>
-    </div>
-    <div class="a">
-      <div class="top"><span class="ico">⚡</span><span class="n">G.Bolt 5d6</span></div>
-      <div class="bot"><span class="slot">2nd</span></div>
-      <div class="tt"><h3>⚡ Guiding Bolt (upcast)</h3><div class="mt">2nd slot · 5d6</div><p>5d6 radiant + advantage on next attack.</p></div>
+    <div class="a wide">
+      <div class="top"><span class="ico">💡</span><span class="n">Opener: SW + Bless</span><span class="m" style="margin-left:auto">T1</span></div>
+      <div class="tt"><h3>💡 Opener: Spiritual Weapon + Bless</h3><div class="mt">Turn 1 Setup</div><p><b>Action:</b> Bless (conc) 3 allies → +1d4</p><p><b>Bonus:</b> Spiritual Weapon → d8+3</p><p>Then: cantrip + SW every turn. Costs 1st + 2nd.</p></div>
     </div>
     <div class="a wide">
-      <div class="top"><span class="ico">💀</span><span class="n">Inflict Wounds → 3d10</span><span class="m" style="margin-left:auto">avg 16.5</span><span class="slot">2nd</span></div>
-      <div class="tt"><h3>💀 Inflict Wounds (upcast)</h3><div class="mt">2nd slot · 3d10</div><p>3d10 = avg 16.5. Massive single-target.</p></div>
+      <div class="top"><span class="ico">🔥</span><span class="n">Nova: Scorch Ray + SW</span><span class="m" style="margin-left:auto">T2+ · ~28 avg</span></div>
+      <div class="tt"><h3>🔥 Nova: Scorching Ray + SW Attack</h3><div class="mt">Turn 2+ Damage</div><p><b>Action:</b> Scorching Ray → 3×2d6 (avg 21)</p><p><b>Bonus:</b> SW attack → d8+3 (avg 7.5)</p><p>Total: avg ~28 damage. Your max burst.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">✨</span><span class="n">Faerie Fire + SW + cantrip</span><span class="m" style="margin-left:auto">Adv</span></div>
+      <div class="tt"><h3>✨ Control: Faerie Fire + SW + Cantrip</h3><div class="mt">Advantage Enabler</div><p><b>T1:</b> Faerie Fire (conc) + SW (BA)</p><p><b>T2+:</b> Cantrip + SW attack. Party gets advantage.</p></div>
+    </div>
+    <div class="a wide">
+      <div class="top"><span class="ico">🔆</span><span class="n">Radiance of Dawn (AoE)</span><span class="m" style="margin-left:auto">2d10+4</span></div>
+      <div class="tt"><h3>🔆 AoE: Radiance of the Dawn</h3><div class="mt">Channel Divinity · Action</div><p>2d10+4 radiant to ALL hostiles in 30ft. Dispels magical darkness. Doesn't hurt allies.</p></div>
     </div>
   </div>
 </div>
 
-<!-- COLUMN 3: COMBOS + DICE + SAVES -->
+<!-- COLUMN 3: DICE + SAVES -->
 <div class="col">
-  <div class="sh">⚡ Combat Combos</div>
-  <div class="card-grid">
-    <div class="a wide">
-      <div class="top"><span class="ico">💡</span><span class="n">Opener: SW + Bless</span><span class="m" style="margin-left:auto">T1</span></div>
-      <div class="tt"><h3>💡 Opener: Spiritual Weapon + Bless</h3><div class="mt">Turn 1 Setup</div><p><b>Action:</b> Cast Bless (conc) on 3 allies → +1d4 atks/saves</p><p><b>Bonus Action:</b> Cast Spiritual Weapon → 1d8+3 force atk</p><p>Now every subsequent turn: cantrip + SW bonus action attack. Costs 1st + 2nd slot.</p></div>
-    </div>
-    <div class="a wide">
-      <div class="top"><span class="ico">🔥</span><span class="n">Nova: Scorch Ray + SW</span><span class="m" style="margin-left:auto">T2+</span></div>
-      <div class="tt"><h3>🔥 Nova: Scorching Ray + SW Attack</h3><div class="mt">Turn 2+ Damage</div><p><b>Action:</b> Scorching Ray → 3 × 2d6 fire (avg 21)</p><p><b>Bonus Action:</b> SW attack → 1d8+3 (avg 7.5)</p><p>Total: avg ~28 damage in one turn. Your max burst.</p></div>
-    </div>
-    <div class="a wide">
-      <div class="top"><span class="ico">✨</span><span class="n">Faerie Fire + SW + cantrip</span><span class="m" style="margin-left:auto">Adv</span></div>
-      <div class="tt"><h3>✨ Control: Faerie Fire + SW + Cantrip</h3><div class="mt">Advantage Enabler</div><p><b>Turn 1:</b> Faerie Fire (conc) + Spiritual Weapon (BA)</p><p><b>Turn 2+:</b> Toll the Dead/Sacred Flame + SW attack (BA)</p><p>Whole party gets advantage on affected targets.</p></div>
-    </div>
-    <div class="a wide">
-      <div class="top"><span class="ico">🔆</span><span class="n">Radiance of Dawn (AoE)</span><span class="m" style="margin-left:auto">2d10+4</span></div>
-      <div class="tt"><h3>🔆 AoE: Radiance of the Dawn</h3><div class="mt">Channel Divinity · Action</div><p>2d10+4 radiant to ALL hostiles in 30ft (avg 15). Dispels magical darkness. Doesn't hurt allies. Use when surrounded.</p></div>
-    </div>
-  </div>
-
-  <div class="sh" style="margin-top:4px">🎲 Quick Roll</div>
+  <div class="sh">🎲 Quick Roll</div>
   <div class="dr" id="dR">—</div>
   <div class="dice">
     <button class="db" onclick="rl(20,1,0)">d20</button>
@@ -357,7 +348,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
     <button class="db" onclick="rl(10,2,4)">Rad.Dawn</button>
   </div>
 
-  <div class="sh" style="margin-top:4px">Saving Throws</div>
+  <div class="sh" style="margin-top:6px">Saving Throws</div>
   <div style="display:flex;flex-wrap:wrap;gap:2px">
     <div class="st" style="min-width:55px"><div class="l">STR</div><div class="v">+0</div></div>
     <div class="st" style="min-width:55px"><div class="l">DEX</div><div class="v">+1</div></div>
@@ -367,9 +358,17 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
     <div class="st" style="min-width:55px;background:#2a2a4a"><div class="l" style="color:var(--gold)">CHA ●</div><div class="v">+3</div></div>
   </div>
 
-  <div class="sh" style="margin-top:4px">Skills (proficient)</div>
-  <div style="font-size:10px;color:var(--dim);line-height:1.6">
+  <div class="sh" style="margin-top:6px">Skills (proficient)</div>
+  <div style="font-size:12px;color:var(--dim);line-height:1.8">
     <b style="color:var(--txt)">Deception</b> +3 · <b style="color:var(--txt)">Insight</b> +5 · <b style="color:var(--txt)">Medicine</b> +5 · <b style="color:var(--txt)">Religion</b> +6
+  </div>
+
+  <div class="sh" style="margin-top:6px">📝 Notes</div>
+  <div style="font-size:11px;color:var(--dim);line-height:1.6">
+    <div>• Shield of Faith is a <b style="color:var(--ba)">Bonus Action</b> to cast</div>
+    <div>• Spiritual Weapon: <b style="color:var(--gold)">NOT concentration</b></div>
+    <div>• Toll the Dead: d12 if target hurt</div>
+    <div>• Faerie Fire: great vs invisible</div>
   </div>
 </div>
 
@@ -387,6 +386,57 @@ function chHP(d){hp=Math.max(0,Math.min(mx,hp+d));upHP();sv()}
 function tSP(e){e.classList.toggle('f');sv()}
 function tP(e){e.classList.toggle('f');sv()}
 function rl(s,c,m){let t=0,r=[];for(let i=0;i<c;i++){const v=Math.floor(Math.random()*s)+1;r.push(v);t+=v}t+=m;const ms=m?`+${m}`:'';const n=c===1&&s===20?(r[0]===20?' NAT 20! 🎉':r[0]===1?' NAT 1 💀':''):'';const e=document.getElementById('dR');e.textContent=`${t} [${r.join('+')}${ms}]${n}`;e.style.color=n.includes('20')?'#0f8':n.includes('1')?'#f44':'#ffd700'}
+
+// Spell casting: click to open level picker, pick level to spend slot
+let openPicker=null;
+function castSpell(card){
+  const pick=card.querySelector('.lvl-pick');
+  if(openPicker&&openPicker!==pick){openPicker.classList.remove('show');openPicker.parentElement.classList.remove('picker-open')}
+  pick.classList.toggle('show');
+  card.classList.toggle('picker-open');
+  openPicker=pick.classList.contains('show')?pick:null;
+  // Update info text with available slots
+  if(openPicker){
+    pick.querySelectorAll('.lp-btn').forEach(btn=>{
+      const lvl=parseInt(btn.textContent);
+      const avail=[...document.querySelectorAll(`.sp[data-lvl="${lvl}"].f`)].length;
+      btn.style.opacity=avail>0?'1':'0.3';
+    });
+  }
+}
+function spend(btn,lvl){
+  // Find a filled slot of this level and spend it
+  const slot=[...document.querySelectorAll(`.sp[data-lvl="${lvl}"].f`)].pop();
+  if(!slot){return}
+  slot.classList.remove('f');
+  // Update the card's displayed meta if upcast
+  const card=btn.closest('.a');
+  const meta=card.querySelector('.m[data-base]');
+  if(meta){
+    if(lvl>=2&&meta.dataset.up){
+      meta.textContent=meta.dataset.up;
+      meta.style.color='#aa66ff';
+      setTimeout(()=>{meta.textContent=meta.dataset.base;meta.style.color=''},2000);
+    }
+  }
+  // Flash and close
+  card.classList.add('cast-flash');
+  setTimeout(()=>card.classList.remove('cast-flash'),400);
+  const pick=card.querySelector('.lvl-pick');
+  pick.classList.remove('show');
+  card.classList.remove('picker-open');
+  openPicker=null;
+  sv();
+}
+// Close picker on outside click
+document.addEventListener('click',e=>{
+  if(openPicker&&!e.target.closest('.a.picker-open')){
+    openPicker.classList.remove('show');
+    openPicker.parentElement.classList.remove('picker-open');
+    openPicker=null;
+  }
+});
+
 function shortRest(){document.querySelectorAll('.pip.sr').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='⏳ Short Rest!';document.getElementById('dR').style.color='#4466aa';sv()}
 function longRest(){hp=mx;upHP();document.querySelectorAll('.sp,.pip').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='🌙 Full Restore!';document.getElementById('dR').style.color='#0c8';sv()}
 

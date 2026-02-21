@@ -60,6 +60,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 /* Upcastable spells — click to show level picker */
 .a.castable{cursor:pointer}
 .a.castable:hover{border-color:#aa66ff55}
+.a.castable.exhausted{opacity:0.35;pointer-events:none}
 .lvl-pick{display:none;position:absolute;z-index:150;left:0;right:0;top:100%;background:#0d1117;border:1px solid #aa66ff;border-radius:0 0 6px 6px;padding:4px 6px;box-shadow:0 4px 12px rgba(0,0,0,.6)}
 .lvl-pick.show{display:flex;gap:4px;align-items:center}
 .lvl-pick .lp-label{font-size:11px;color:var(--dim)}
@@ -184,37 +185,37 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
   <div class="sh2">— 1st Level Spells —</div>
   <div class="card-grid">
-    <div class="a castable" data-spell="bane" onclick="castSpell(this)">
+    <div class="a castable" data-spell="bane" data-min-lvl="1" onclick="castSpell(this)">
       <div class="top"><span class="ico">😈</span><span class="n">Bane</span></div>
       <div class="bot"><span class="m" data-base="3 tgt · −d4" data-up="4 tgt · −d4">3 tgt · −d4</span><span class="conc">CONC</span></div>
       <div class="tt"><h3>😈 Bane</h3><div class="mt">1st · V,S,M · 30ft · CHA 13 · Conc 1 min</div><p>3 creatures subtract 1d4 from attacks and saves.</p><p><b>Upcast 2nd:</b> 4 targets.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable" data-spell="bless" onclick="castSpell(this)">
+    <div class="a castable" data-spell="bless" data-min-lvl="1" onclick="castSpell(this)">
       <div class="top"><span class="ico">🙌</span><span class="n">Bless</span></div>
       <div class="bot"><span class="m" data-base="3 tgt · +d4" data-up="4 tgt · +d4">3 tgt · +d4</span><span class="conc">CONC</span></div>
       <div class="tt"><h3>🙌 Bless</h3><div class="mt">1st · V,S,M · 30ft · Conc 1 min</div><p>3 creatures add 1d4 to attacks and saves.</p><p><b>Upcast 2nd:</b> 4 targets.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable" data-spell="burnHands" onclick="castSpell(this)">
+    <div class="a castable" data-spell="burnHands" data-min-lvl="1" onclick="castSpell(this)">
       <div class="top"><span class="ico">🔥</span><span class="n">Burning Hands</span></div>
       <div class="bot"><span class="m" data-base="15ft cone · 3d6" data-up="15ft cone · 4d6">15ft cone · 3d6</span></div>
       <div class="tt"><h3>🔥 Burning Hands</h3><div class="mt">1st · V,S · 15ft cone · DEX 13</div><p>3d6 fire, half on save.</p><p><b>Upcast 2nd:</b> 4d6.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable" data-spell="faerie" onclick="castSpell(this)">
+    <div class="a castable" data-spell="faerie" data-min-lvl="1" onclick="castSpell(this)">
       <div class="top"><span class="ico">✨</span><span class="n">Faerie Fire</span></div>
       <div class="bot"><span class="m">Adv atks · 20ft</span><span class="conc">CONC</span></div>
       <div class="tt"><h3>✨ Faerie Fire</h3><div class="mt">1st · V · 60ft · 20ft cube · DEX 13 · Conc 1 min</div><p>Failed saves: outlined in light. <b>All attacks against them have advantage.</b> Can't be invisible.</p><p>No damage — pure support. But advantage for the <b>whole party</b> for up to 10 rounds is massive action economy.</p><p>💎 <b>Icewind Dale MVP:</b> Counters invisible stalkers, blizzard obscurement, and hidden enemies.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable" data-spell="guidBolt" onclick="castSpell(this)">
+    <div class="a castable" data-spell="guidBolt" data-min-lvl="1" onclick="castSpell(this)">
       <div class="top"><span class="ico">⚡</span><span class="n">Guiding Bolt</span></div>
       <div class="bot"><span class="m" data-base="+5 · 4d6 rad" data-up="+5 · 5d6 rad">+5 · 4d6 rad</span></div>
       <div class="tt"><h3>⚡ Guiding Bolt</h3><div class="mt">1st · V,S · 120ft · +5</div><p>4d6 radiant. Next attack vs target has <b>advantage</b>.</p><p><b>Upcast 2nd:</b> 5d6.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable" data-spell="inflict" onclick="castSpell(this)">
+    <div class="a castable" data-spell="inflict" data-min-lvl="1" onclick="castSpell(this)">
       <div class="top"><span class="ico">💀</span><span class="n">Inflict Wounds</span></div>
       <div class="bot"><span class="m" data-base="Touch · +5 · 2d10" data-up="Touch · +5 · 3d10">Touch · +5 · 2d10</span></div>
       <div class="tt"><h3>💀 Inflict Wounds</h3><div class="mt">1st · V,S · Touch · +5</div><p>2d10 necrotic. Highest 1st-level single target!</p><p><b>Upcast 2nd:</b> 3d10 (avg 16.5).</p></div>
@@ -224,24 +225,24 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
   <div class="sh2">— 2nd Level Spells —</div>
   <div class="card-grid">
-    <div class="a castable" data-spell="scorchRay" onclick="castSpell(this)">
+    <div class="a castable" data-spell="scorchRay" data-min-lvl="2" onclick="castSpell(this)">
       <div class="top"><span class="ico">🔥🔥</span><span class="n">Scorching Ray</span></div>
       <div class="bot"><span class="m">3×2d6 fire</span></div>
       <div class="tt"><h3>🔥🔥 Scorching Ray</h3><div class="mt">2nd · V,S · 120ft · +5 per ray</div><p>3 rays × 2d6 fire. <b>Max 6d6 (avg 21) single target!</b></p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable" data-spell="seeInvis" onclick="castSpell(this)">
+    <div class="a castable" data-spell="seeInvis" data-min-lvl="2" onclick="castSpell(this)">
       <div class="top"><span class="ico">👁️</span><span class="n">See Invisibility</span></div>
       <div class="bot"><span class="m">1hr · No conc</span></div>
       <div class="tt"><h3>👁️ See Invisibility</h3><div class="mt">2nd · V,S,M · Self · 1hr · NO concentration</div><p>See invisible creatures + Ethereal Plane.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable wide" data-spell="prayer" onclick="castSpell(this)">
+    <div class="a castable wide" data-spell="prayer" data-min-lvl="2" onclick="castSpell(this)">
       <div class="top"><span class="ico">💚</span><span class="n">Prayer of Healing</span><span class="m" style="margin-left:auto">10min · 6×2d8</span></div>
       <div class="tt"><h3>💚 Prayer of Healing</h3><div class="mt">2nd · V · 10 min · 30ft</div><p>Up to 6 creatures regain 2d8 HP. Out of combat only.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable wide" data-spell="spirWeap" onclick="castSpell(this)">
+    <div class="a castable wide" data-spell="spirWeap" data-min-lvl="2" onclick="castSpell(this)">
       <div class="top"><span class="ico">⚔️</span><span class="n">Spiritual Weapon</span><span class="m" style="margin-left:auto">BA · +5 · d8+3 · No conc</span></div>
       <div class="tt"><h3>⚔️ Spiritual Weapon</h3><div class="mt">2nd · V,S · BA to cast · 60ft · 1 min</div><p>Melee spell atk +5: 1d8+3 force. <b>NOT concentration!</b></p><p>BA each turn: move 20ft + attack. Pair with any conc spell!</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
@@ -272,7 +273,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
       <div class="top"><span class="ico">⚔️</span><span class="n">SW Atk (subsequent)</span><span class="m" style="margin-left:auto">20ft move + d8+3</span></div>
       <div class="tt"><h3>⚔️ Spiritual Weapon Attack</h3><div class="mt">Bonus Action each turn (already cast)</div><p>Move weapon 20ft + melee spell attack +5: 1d8+3 force. Free damage every turn!</p></div>
     </div>
-    <div class="a castable" data-spell="shield" onclick="castSpell(this)">
+    <div class="a castable" data-spell="shield" data-min-lvl="1" onclick="castSpell(this)">
       <div class="top"><span class="ico">🛡️</span><span class="n">Shield of Faith</span></div>
       <div class="bot"><span class="m">+2 AC</span><span class="conc">CONC</span></div>
       <div class="tt"><h3>🛡️ Shield of Faith</h3><div class="mt">1st · V,S,M · BA · 60ft · Conc 10 min</div><p>+2 AC to target. Concentration — can't stack with Bless/Bane/Faerie Fire.</p></div>
@@ -462,12 +463,25 @@ document.addEventListener('click',e=>{
   }
 });
 
+// Disable spells when no valid slots remain
+function updateExhausted(){
+  document.querySelectorAll('.a.castable[data-min-lvl]').forEach(card=>{
+    const min=parseInt(card.dataset.minLvl);
+    // Can cast if ANY slot at min level or above is filled
+    let canCast=false;
+    for(let lvl=min;lvl<=2;lvl++){
+      if(document.querySelector(`.sp[data-lvl="${lvl}"].f`)){canCast=true;break}
+    }
+    card.classList.toggle('exhausted',!canCast);
+  });
+}
+
 function shortRest(){document.querySelectorAll('.pip.sr').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='⏳ Short Rest!';document.getElementById('dR').style.color='#4466aa';sv()}
 function longRest(){hp=mx;upHP();document.querySelectorAll('.sp,.pip').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='🌙 Full Restore!';document.getElementById('dR').style.color='#0c8';sv()}
 
-function sv(){const s=[...document.querySelectorAll('.sp')].map(p=>p.classList.contains('f'));const p=[...document.querySelectorAll('.pip')].map(p=>p.classList.contains('f'));localStorage.setItem('korin',JSON.stringify({hp,s,p}))}
+function sv(){const s=[...document.querySelectorAll('.sp')].map(p=>p.classList.contains('f'));const p=[...document.querySelectorAll('.pip')].map(p=>p.classList.contains('f'));localStorage.setItem('korin',JSON.stringify({hp,s,p}));updateExhausted()}
 function ld(){const r=localStorage.getItem('korin');if(!r)return;try{const d=JSON.parse(r);if(d.hp!==undefined)hp=d.hp;if(d.s)document.querySelectorAll('.sp').forEach((p,i)=>{if(d.s[i]!==undefined)p.classList.toggle('f',d.s[i])});if(d.p)document.querySelectorAll('.pip').forEach((p,i)=>{if(d.p[i]!==undefined)p.classList.toggle('f',d.p[i])})}catch(e){}}
-ld();upHP();
+ld();upHP();updateExhausted();
 </script>
 </body>
 </html>

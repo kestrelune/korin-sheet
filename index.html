@@ -432,7 +432,7 @@ document.querySelectorAll('.a').forEach(card=>{
   const tt=card.querySelector('.tt');
   if(!tt)return;
   card.addEventListener('mouseenter',()=>{
-    if(card.classList.contains('picker-open'))return;
+    if(card.classList.contains('picker-open')||card.classList.contains('exhausted'))return;
     const r=card.getBoundingClientRect();
     tt.style.left=r.left+'px';
     tt.classList.add('show');

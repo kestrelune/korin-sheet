@@ -2,756 +2,247 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Korin Emberfall — The Last Spark of Hope</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korin Emberfall</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-:root {
-  --bg: #1a1a2e;
-  --card: #16213e;
-  --card-hover: #1a2744;
-  --accent: #e94560;
-  --gold: #ffd700;
-  --heal: #00cc88;
-  --blue: #4488ff;
-  --text: #e0e0e0;
-  --dim: #888;
-  --border: #2a2a4a;
-  --radiant: #ffdd44;
-  --necrotic: #7744aa;
-}
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  font-size: 14px;
-  padding: 8px;
-  max-width: 800px;
-  margin: 0 auto;
-  -webkit-user-select: none;
-  user-select: none;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#1a1a2e;--card:#16213e;--ch:#1a2744;--acc:#e94560;--gold:#ffd700;--heal:#00cc88;--blue:#4488ff;--txt:#e0e0e0;--dim:#888;--brd:#2a2a4a;--fire:#ff6622}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;padding:6px;-webkit-user-select:none;user-select:none}
 
-/* Header */
-.header {
-  text-align: center;
-  padding: 12px 0 8px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 8px;
-}
-.header h1 { font-size: 18px; color: var(--gold); margin-bottom: 2px; }
-.header .subtitle { font-size: 11px; color: var(--dim); font-style: italic; }
-.header .class-info { font-size: 12px; color: var(--accent); margin-top: 4px; }
+/* Header bar */
+.hdr{display:flex;align-items:center;gap:12px;padding:6px 8px;border-bottom:1px solid var(--brd);margin-bottom:6px}
+.hdr h1{font-size:16px;color:var(--gold)}
+.hdr .sub{font-size:10px;color:var(--dim);font-style:italic}
+.hdr .cls{font-size:11px;color:var(--acc)}
 
-/* HP Bar */
-.hp-bar-container {
-  background: #111;
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin: 8px 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.hp-label { font-size: 12px; color: var(--dim); white-space: nowrap; }
-.hp-bar {
-  flex: 1;
-  height: 20px;
-  background: #333;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-.hp-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #cc3344, #44cc66);
-  border-radius: 10px;
-  transition: width 0.3s;
-}
-.hp-text {
-  font-size: 16px;
-  font-weight: bold;
-  min-width: 60px;
-  text-align: right;
-}
-.hp-controls { display: flex; gap: 4px; }
-.hp-btn {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hp-btn:active { background: var(--accent); }
+/* HP bar inline */
+.hp{display:flex;align-items:center;gap:6px;background:#111;border-radius:6px;padding:4px 8px;margin-bottom:6px}
+.hp .bar{flex:1;height:16px;background:#333;border-radius:8px;overflow:hidden}
+.hp .fill{height:100%;border-radius:8px;transition:width .3s}
+.hp .val{font-size:15px;font-weight:bold;min-width:50px;text-align:right}
+.hp .b{width:24px;height:24px;border-radius:50%;border:1px solid var(--brd);background:var(--card);color:var(--txt);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.hp .b:active{background:var(--acc)}
 
-/* Quick Stats Row */
-.stats-row {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 8px;
-}
-.stat-box {
-  flex: 1;
-  background: var(--card);
-  border-radius: 6px;
-  padding: 6px 4px;
-  text-align: center;
-}
-.stat-box .label { font-size: 9px; color: var(--dim); text-transform: uppercase; }
-.stat-box .value { font-size: 16px; font-weight: bold; }
+/* Grid layout */
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:450px){.grid{grid-template-columns:1fr}}
 
-/* Section */
-.section { margin-bottom: 8px; }
-.section-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--accent);
-  padding: 4px 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 4px;
-}
+.col{display:flex;flex-direction:column;gap:4px}
 
-/* Ability cards */
-.ability {
-  background: var(--card);
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-bottom: 4px;
-  cursor: pointer;
-  border-left: 3px solid var(--border);
-  transition: background 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.ability:hover, .ability:active { background: var(--card-hover); }
-.ability.used { opacity: 0.4; }
-.ability.heal { border-left-color: var(--heal); }
-.ability.attack { border-left-color: var(--accent); }
-.ability.buff { border-left-color: var(--blue); }
-.ability.racial { border-left-color: var(--radiant); }
-.ability.spell { border-left-color: #aa66ff; }
+/* Stat pills */
+.stats{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px}
+.st{background:var(--card);border-radius:4px;padding:3px 8px;text-align:center;flex:1;min-width:55px}
+.st .l{font-size:8px;color:var(--dim);text-transform:uppercase}
+.st .v{font-size:14px;font-weight:bold}
 
-.ability-info { flex: 1; }
-.ability-name { font-size: 13px; font-weight: 600; }
-.ability-brief { font-size: 10px; color: var(--dim); margin-top: 1px; }
-.ability-meta { font-size: 10px; color: var(--dim); }
+/* Section headers */
+.sh{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--acc);padding:2px 0;border-bottom:1px solid var(--brd);margin-bottom:2px}
 
-.uses {
-  display: flex;
-  gap: 3px;
-}
-.use-pip {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  border: 2px solid var(--dim);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.use-pip.filled { background: var(--gold); border-color: var(--gold); }
-.use-pip:hover { border-color: var(--gold); }
+/* Ability row - compact */
+.a{background:var(--card);border-radius:4px;padding:4px 6px;cursor:pointer;border-left:3px solid var(--brd);display:flex;align-items:center;gap:6px;min-height:32px;transition:background .1s}
+.a:hover,.a:active{background:var(--ch)}
+.a.used{opacity:.35}
+.a .n{font-size:12px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a .d{font-size:9px;color:var(--dim)}
+.a .m{font-size:9px;color:var(--dim);white-space:nowrap}
+.a.heal{border-left-color:var(--heal)}.a.atk{border-left-color:var(--acc)}.a.buff{border-left-color:var(--blue)}.a.racial{border-left-color:var(--gold)}.a.fire{border-left-color:var(--fire)}.a.spell{border-left-color:#aa66ff}
 
-/* Spell Slots */
-.spell-slots {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 4px;
-  align-items: center;
-}
-.slot-group { display: flex; align-items: center; gap: 4px; }
-.slot-label { font-size: 10px; color: var(--dim); }
-.slot-pip {
-  width: 18px; height: 18px;
-  border-radius: 4px;
-  border: 2px solid #aa66ff;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.slot-pip.filled { background: #aa66ff; }
-.slot-pip:hover { border-color: #cc88ff; }
+/* Use pips */
+.pips{display:flex;gap:2px}
+.pip{width:12px;height:12px;border-radius:50%;border:2px solid var(--dim);cursor:pointer;transition:all .1s}
+.pip.f{background:var(--gold);border-color:var(--gold)}
+.pip:hover{border-color:var(--gold)}
 
-/* Detail tooltip */
-.detail-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 100;
-  padding: 20px;
-  overflow-y: auto;
-}
-.detail-overlay.show { display: block; }
-.detail-card {
-  background: var(--card);
-  border-radius: 10px;
-  padding: 16px;
-  max-width: 400px;
-  margin: 40px auto;
-  border: 1px solid var(--border);
-}
-.detail-card h2 { font-size: 16px; color: var(--gold); margin-bottom: 8px; }
-.detail-card .meta { font-size: 11px; color: var(--accent); margin-bottom: 8px; }
-.detail-card p { font-size: 13px; line-height: 1.5; margin-bottom: 8px; }
-.detail-card .close-hint { font-size: 10px; color: var(--dim); text-align: center; margin-top: 12px; }
+/* Spell slot pips */
+.slots{display:flex;gap:3px;align-items:center;margin-bottom:2px}
+.slots .lbl{font-size:9px;color:var(--dim);min-width:22px}
+.sp{width:16px;height:16px;border-radius:3px;border:2px solid #aa66ff;cursor:pointer;transition:all .1s}
+.sp.f{background:#aa66ff}
 
-/* Dice roller */
-.dice-bar {
-  display: flex;
-  gap: 4px;
-  margin: 8px 0;
-  flex-wrap: wrap;
-}
-.dice-btn {
-  padding: 6px 10px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-size: 12px;
-  cursor: pointer;
-}
-.dice-btn:active { background: var(--accent); }
-.dice-result {
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--gold);
-  min-height: 36px;
-  line-height: 36px;
-}
+/* Dice */
+.dice{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px}
+.db{padding:4px 8px;background:var(--card);border:1px solid var(--brd);border-radius:4px;color:var(--txt);font-size:11px;cursor:pointer}
+.db:active{background:var(--acc)}
+.dr{text-align:center;font-size:20px;font-weight:bold;color:var(--gold);min-height:28px;line-height:28px}
 
 /* Long rest */
-.long-rest-btn {
-  width: 100%;
-  padding: 10px;
-  background: #1a3a2a;
-  border: 1px solid #2a5a3a;
-  border-radius: 8px;
-  color: var(--heal);
-  font-size: 13px;
-  cursor: pointer;
-  text-align: center;
-  margin-top: 8px;
-}
-.long-rest-btn:active { background: #2a5a3a; }
+.lr{width:100%;padding:6px;background:#1a3a2a;border:1px solid #2a5a3a;border-radius:6px;color:var(--heal);font-size:12px;cursor:pointer;text-align:center;margin-top:4px}
+.lr:active{background:#2a5a3a}
 
-/* Responsive tweaks */
-@media (max-width: 360px) {
-  body { font-size: 12px; }
-  .ability-name { font-size: 12px; }
-}
+/* Detail overlay */
+.ov{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.88);z-index:100;padding:16px;overflow-y:auto}
+.ov.show{display:block}
+.dc{background:var(--card);border-radius:8px;padding:14px;max-width:420px;margin:30px auto;border:1px solid var(--brd)}
+.dc h2{font-size:15px;color:var(--gold);margin-bottom:6px}
+.dc .mt{font-size:10px;color:var(--acc);margin-bottom:6px}
+.dc p{font-size:12px;line-height:1.5;margin-bottom:6px}
+.dc .ch{font-size:9px;color:var(--dim);text-align:center;margin-top:8px}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>⚔️ Korin Emberfall</h1>
-  <div class="subtitle">"The Last Spark of Hope"</div>
-  <div class="class-info">Aasimar Cleric 4 · Light Domain · Icewind Dale</div>
-</div>
-
-<!-- HP -->
-<div class="hp-bar-container">
-  <span class="hp-label">HP</span>
-  <div class="hp-bar"><div class="hp-bar-fill" id="hpFill"></div></div>
-  <span class="hp-text" id="hpText">25/31</span>
-  <div class="hp-controls">
-    <button class="hp-btn" onclick="changeHP(-1)">−</button>
-    <button class="hp-btn" onclick="changeHP(1)">+</button>
+<div class="hdr">
+  <div>
+    <h1>⚔️ Korin Emberfall</h1>
+    <span class="sub">"The Last Spark of Hope"</span>
   </div>
+  <span class="cls">Aasimar Cleric 4 · Light Domain · Icewind Dale</span>
 </div>
 
-<!-- Quick Stats -->
-<div class="stats-row">
-  <div class="stat-box"><div class="label">AC</div><div class="value">16</div></div>
-  <div class="stat-box"><div class="label">Init</div><div class="value">+1</div></div>
-  <div class="stat-box"><div class="label">Speed</div><div class="value">30</div></div>
-  <div class="stat-box"><div class="label">Prof</div><div class="value">+2</div></div>
-  <div class="stat-box"><div class="label">Spell DC</div><div class="value">13</div></div>
-  <div class="stat-box"><div class="label">Spell Atk</div><div class="value">+5</div></div>
+<div class="hp">
+  <span style="font-size:11px;color:var(--dim)">HP</span>
+  <div class="bar"><div class="fill" id="hpF"></div></div>
+  <span class="val" id="hpT">25/31</span>
+  <button class="b" onclick="chHP(-1)">−</button>
+  <button class="b" onclick="chHP(1)">+</button>
+  <button class="b" onclick="chHP(-5)" style="font-size:10px">-5</button>
+  <button class="b" onclick="chHP(5)" style="font-size:10px">+5</button>
+</div>
+
+<div class="stats">
+  <div class="st"><div class="l">AC</div><div class="v">16</div></div>
+  <div class="st"><div class="l">Init</div><div class="v">+1</div></div>
+  <div class="st"><div class="l">Speed</div><div class="v">30</div></div>
+  <div class="st"><div class="l">Prof</div><div class="v">+2</div></div>
+  <div class="st"><div class="l">DC</div><div class="v">13</div></div>
+  <div class="st"><div class="l">Spell</div><div class="v">+5</div></div>
+  <div class="st"><div class="l">STR</div><div class="v">+0</div></div>
+  <div class="st"><div class="l">DEX</div><div class="v">+1</div></div>
+  <div class="st"><div class="l">CON</div><div class="v">+2</div></div>
+  <div class="st"><div class="l">INT</div><div class="v">+1</div></div>
+  <div class="st"><div class="l">WIS</div><div class="v">+3</div></div>
+  <div class="st"><div class="l">CHA</div><div class="v">+1</div></div>
 </div>
 
 <!-- Spell Slots -->
-<div class="section">
-  <div class="section-title">Spell Slots</div>
-  <div class="spell-slots">
-    <div class="slot-group">
-      <span class="slot-label">1st</span>
-      <div class="slot-pip filled" onclick="toggleSlot(this)"></div>
-      <div class="slot-pip filled" onclick="toggleSlot(this)"></div>
-      <div class="slot-pip filled" onclick="toggleSlot(this)"></div>
-      <div class="slot-pip filled" onclick="toggleSlot(this)"></div>
-    </div>
-    <div class="slot-group">
-      <span class="slot-label">2nd</span>
-      <div class="slot-pip filled" onclick="toggleSlot(this)"></div>
-      <div class="slot-pip filled" onclick="toggleSlot(this)"></div>
-      <div class="slot-pip filled" onclick="toggleSlot(this)"></div>
-    </div>
+<div style="display:flex;gap:12px;margin-bottom:6px">
+  <div class="slots"><span class="lbl">1st:</span>
+    <div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div>
+  </div>
+  <div class="slots"><span class="lbl">2nd:</span>
+    <div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div><div class="sp f" onclick="tSP(this)"></div>
   </div>
 </div>
 
-<!-- Racial / Class Features -->
-<div class="section">
-  <div class="section-title">Features & Abilities</div>
-  
-  <div class="ability racial" onclick="showDetail('healingHands')">
-    <div class="ability-info">
-      <div class="ability-name">🤲 Healing Hands</div>
-      <div class="ability-brief">Touch · Heal 2d4 HP · Magic Action</div>
-    </div>
-    <div class="uses" id="healingHandsUses">
-      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
-    </div>
-  </div>
+<!-- 3-column grid -->
+<div class="grid">
 
-  <div class="ability racial" onclick="showDetail('celestialRevelation')">
-    <div class="ability-info">
-      <div class="ability-name">✨ Celestial Revelation</div>
-      <div class="ability-brief">Bonus Action · 1 min · Extra radiant dmg</div>
-    </div>
-    <div class="uses" id="celestialUses">
-      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
-    </div>
-  </div>
+<!-- Column 1: Features & Racial -->
+<div class="col">
+  <div class="sh">Features</div>
+  <div class="a racial" onclick="sd('healHands')"><div class="n">🤲 Healing Hands</div><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+  <div class="a racial" onclick="sd('celRev')"><div class="n">✨ Celestial Revelation</div><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+  <div class="a buff" onclick="sd('chanDiv')"><div class="n">🔆 Channel Divinity</div><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+  <div class="a atk" onclick="sd('wardFlare')"><div class="n">💥 Warding Flare</div><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+  <div class="a racial" onclick="sd('celRes')"><div class="n">🛡️ Resist Necro/Radiant</div><div class="m">Passive</div></div>
+  <div class="a racial" onclick="sd('darkv')"><div class="n">👁️ Darkvision 60ft</div><div class="m">Passive</div></div>
 
-  <div class="ability buff" onclick="showDetail('channelDivinity')">
-    <div class="ability-info">
-      <div class="ability-name">🔆 Channel Divinity</div>
-      <div class="ability-brief">Turn Undead OR Radiance of the Dawn</div>
-    </div>
-    <div class="uses" id="channelUses">
-      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
-    </div>
-  </div>
+  <div class="sh" style="margin-top:4px">Cantrips</div>
+  <div class="a spell" onclick="sd('guidance')"><div class="n">🙏 Guidance</div><div class="m">+1d4 chk</div></div>
+  <div class="a spell" onclick="sd('light')"><div class="n">💡 Light</div><div class="m">20ft</div></div>
+  <div class="a spell" onclick="sd('resistance')"><div class="n">🛡️ Resistance</div><div class="m">+1d4 save</div></div>
+  <div class="a spell" onclick="sd('sacFlame')"><div class="n">🔥 Sacred Flame</div><div class="m">1d8 rad</div></div>
+  <div class="a spell" onclick="sd('tollDead')"><div class="n">🔔 Toll the Dead</div><div class="m">1d8/d12</div></div>
+</div>
 
-  <div class="ability attack" onclick="showDetail('wardingFlare')">
-    <div class="ability-info">
-      <div class="ability-name">💥 Warding Flare</div>
-      <div class="ability-brief">Reaction · Impose disadvantage on attacker</div>
-    </div>
-    <div class="uses" id="wardingFlareUses">
-      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
-      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
-      <div class="use-pip filled" onclick="event.stopPropagation(); togglePip(this)"></div>
-    </div>
-  </div>
+<!-- Column 2: 1st Level Spells -->
+<div class="col">
+  <div class="sh">1st Level</div>
+  <div class="a buff" onclick="sd('bane')"><div class="n">😈 Bane</div><div class="d">CHA 13 · Debuff · Conc</div></div>
+  <div class="a buff" onclick="sd('bless')"><div class="n">🙌 Bless</div><div class="d">3 targets · +1d4 · Conc</div></div>
+  <div class="a fire" onclick="sd('burnHands')"><div class="n">🔥 Burning Hands</div><div class="d">15ft cone · DEX 13 · 3d6</div></div>
+  <div class="a buff" onclick="sd('faerie')"><div class="n">✨ Faerie Fire</div><div class="d">60ft · DEX 13 · Adv atks · Conc</div></div>
+  <div class="a atk" onclick="sd('guidBolt')"><div class="n">⚡ Guiding Bolt</div><div class="d">120ft · +5 · 4d6 rad · Adv next</div></div>
+  <div class="a atk" onclick="sd('inflict')"><div class="n">💀 Inflict Wounds</div><div class="d">Touch · +5 · 2d10 necro</div></div>
+  <div class="a buff" onclick="sd('shield')"><div class="n">🛡️ Shield of Faith</div><div class="d">BA · 60ft · +2 AC · Conc</div></div>
+</div>
 
-  <div class="ability buff" onclick="showDetail('celestialResistance')">
-    <div class="ability-info">
-      <div class="ability-name">🛡️ Celestial Resistance</div>
-      <div class="ability-brief">Resist necrotic & radiant damage</div>
-    </div>
-    <div class="ability-meta">Passive</div>
-  </div>
+<!-- Column 3: 2nd Level + Dice -->
+<div class="col">
+  <div class="sh">2nd Level</div>
+  <div class="a heal" onclick="sd('prayer')"><div class="n">💚 Prayer of Healing</div><div class="d">10min · 30ft · 2d8 heal</div></div>
+  <div class="a fire" onclick="sd('scorchRay')"><div class="n">🔥🔥 Scorching Ray</div><div class="d">120ft · +5 · 3×2d6 fire</div></div>
+  <div class="a buff" onclick="sd('seeInvis')"><div class="n">👁️ See Invisibility</div><div class="d">Self · 1hr · No conc</div></div>
+  <div class="a buff" onclick="sd('spirWeap')"><div class="n">⚔️ Spiritual Weapon</div><div class="d">BA · +5 · 1d8+3 · No conc!</div></div>
 
-  <div class="ability buff" onclick="showDetail('lightBearer')">
-    <div class="ability-info">
-      <div class="ability-name">💡 Light Bearer</div>
-      <div class="ability-brief">Light cantrip (CHA) · At will</div>
-    </div>
-    <div class="ability-meta">∞</div>
-  </div>
+  <div class="sh" style="margin-top:4px">2nd (upcast 1st)</div>
+  <div class="a buff" onclick="sd('bane2')"><div class="n">😈 Bane +1 target</div><div class="m">2nd</div></div>
+  <div class="a buff" onclick="sd('bless2')"><div class="n">🙌 Bless +1 target</div><div class="m">2nd</div></div>
+  <div class="a fire" onclick="sd('burn2')"><div class="n">🔥 Burning Hands 4d6</div><div class="m">2nd</div></div>
+  <div class="a atk" onclick="sd('guid2')"><div class="n">⚡ Guiding Bolt 5d6</div><div class="m">2nd</div></div>
+  <div class="a atk" onclick="sd('inflict2')"><div class="n">💀 Inflict Wounds 3d10</div><div class="m">2nd</div></div>
 
-  <div class="ability buff" onclick="showDetail('darkvision')">
-    <div class="ability-info">
-      <div class="ability-name">👁️ Darkvision</div>
-      <div class="ability-brief">See 60 ft in dim/dark</div>
-    </div>
-    <div class="ability-meta">Passive</div>
+  <div class="sh" style="margin-top:4px">Quick Roll</div>
+  <div class="dr" id="dR">—</div>
+  <div class="dice">
+    <button class="db" onclick="rl(20,1,0)">d20</button>
+    <button class="db" onclick="rl(20,1,5)">+5</button>
+    <button class="db" onclick="rl(8,1,0)">d8</button>
+    <button class="db" onclick="rl(6,4,0)">4d6</button>
+    <button class="db" onclick="rl(6,3,0)">3×2d6</button>
+    <button class="db" onclick="rl(10,2,0)">2d10</button>
+    <button class="db" onclick="rl(8,2,0)">2d8</button>
+    <button class="db" onclick="rl(4,1,0)">d4</button>
   </div>
 </div>
 
-<!-- Cantrips -->
-<div class="section">
-  <div class="section-title">Cantrips (at will)</div>
-  
-  <div class="ability spell" onclick="showDetail('sacredFlame')">
-    <div class="ability-info">
-      <div class="ability-name">🔥 Sacred Flame</div>
-      <div class="ability-brief">60 ft · DEX save · 1d8 radiant</div>
-    </div>
-    <div class="ability-meta">∞</div>
-  </div>
+</div><!-- grid -->
 
-  <div class="ability spell" onclick="showDetail('spareTheDying')">
-    <div class="ability-info">
-      <div class="ability-name">🫀 Spare the Dying</div>
-      <div class="ability-brief">Touch · Stabilize creature at 0 HP</div>
-    </div>
-    <div class="ability-meta">∞</div>
-  </div>
+<button class="lr" onclick="longRest()">🌙 Long Rest — Restore All</button>
 
-  <div class="ability spell" onclick="showDetail('guidance')">
-    <div class="ability-info">
-      <div class="ability-name">🙏 Guidance</div>
-      <div class="ability-brief">Touch · +1d4 to one ability check</div>
-    </div>
-    <div class="ability-meta">∞</div>
-  </div>
-
-  <div class="ability spell" onclick="showDetail('tollTheDead')">
-    <div class="ability-info">
-      <div class="ability-name">🔔 Toll the Dead</div>
-      <div class="ability-brief">60 ft · WIS save · 1d8/1d12 necrotic</div>
-    </div>
-    <div class="ability-meta">∞</div>
-  </div>
-
-  <div class="ability spell" onclick="showDetail('light')">
-    <div class="ability-info">
-      <div class="ability-name">💡 Light</div>
-      <div class="ability-brief">Touch · Object sheds bright light 20 ft</div>
-    </div>
-    <div class="ability-meta">∞</div>
-  </div>
-</div>
-
-<!-- Prepared Spells -->
-<div class="section">
-  <div class="section-title">Domain Spells (always prepared — Light)</div>
-
-  <div class="ability attack" onclick="showDetail('burningHands')">
-    <div class="ability-info">
-      <div class="ability-name">🔥 Burning Hands</div>
-      <div class="ability-brief">Self (15ft cone) · DEX save · 3d6 fire</div>
-    </div>
-    <div class="ability-meta">1st</div>
-  </div>
-
-  <div class="ability buff" onclick="showDetail('faerieFire')">
-    <div class="ability-info">
-      <div class="ability-name">✨ Faerie Fire</div>
-      <div class="ability-brief">Conc · 60 ft · DEX save · Advantage on attacks</div>
-    </div>
-    <div class="ability-meta">1st</div>
-  </div>
-
-  <div class="ability attack" onclick="showDetail('flamingSphere')">
-    <div class="ability-info">
-      <div class="ability-name">🔴 Flaming Sphere</div>
-      <div class="ability-brief">Conc · 60 ft · Bonus Action to ram · 2d6 fire</div>
-    </div>
-    <div class="ability-meta">2nd</div>
-  </div>
-
-  <div class="ability attack" onclick="showDetail('scorchingRay')">
-    <div class="ability-info">
-      <div class="ability-name">🔥🔥 Scorching Ray</div>
-      <div class="ability-brief">120 ft · 3 rays · Ranged spell atk · 2d6 fire each</div>
-    </div>
-    <div class="ability-meta">2nd</div>
-  </div>
-
-  <div class="section-title">Prepared Spells (choose 7 — edit as needed)</div>
-
-  <div class="ability heal" onclick="showDetail('healingWord')">
-    <div class="ability-info">
-      <div class="ability-name">💚 Healing Word</div>
-      <div class="ability-brief">Bonus Action · 60 ft · 2d4+3 HP</div>
-    </div>
-    <div class="ability-meta">1st</div>
-  </div>
-
-  <div class="ability heal" onclick="showDetail('cureWounds')">
-    <div class="ability-info">
-      <div class="ability-name">💚 Cure Wounds</div>
-      <div class="ability-brief">Touch · 2d8+3 HP</div>
-    </div>
-    <div class="ability-meta">1st</div>
-  </div>
-
-  <div class="ability buff" onclick="showDetail('bless')">
-    <div class="ability-info">
-      <div class="ability-name">🙌 Bless</div>
-      <div class="ability-brief">Conc · 3 creatures · +1d4 atk & saves</div>
-    </div>
-    <div class="ability-meta">1st</div>
-  </div>
-
-  <div class="ability buff" onclick="showDetail('shieldOfFaith')">
-    <div class="ability-info">
-      <div class="ability-name">🛡️ Shield of Faith</div>
-      <div class="ability-brief">Bonus Action · Conc · +2 AC</div>
-    </div>
-    <div class="ability-meta">1st</div>
-  </div>
-
-  <div class="ability attack" onclick="showDetail('guidingBolt')">
-    <div class="ability-info">
-      <div class="ability-name">⚡ Guiding Bolt</div>
-      <div class="ability-brief">120 ft · Ranged spell atk · 4d6 radiant</div>
-    </div>
-    <div class="ability-meta">1st</div>
-  </div>
-
-  <div class="ability buff" onclick="showDetail('spiritualWeapon')">
-    <div class="ability-info">
-      <div class="ability-name">⚔️ Spiritual Weapon</div>
-      <div class="ability-brief">Bonus Action · 60 ft · 1d8+3 force · NOT conc!</div>
-    </div>
-    <div class="ability-meta">2nd</div>
-  </div>
-
-  <div class="ability buff" onclick="showDetail('holdPerson')">
-    <div class="ability-info">
-      <div class="ability-name">✋ Hold Person</div>
-      <div class="ability-brief">Conc · 60 ft · WIS save · Paralyzed</div>
-    </div>
-    <div class="ability-meta">2nd</div>
-  </div>
-</div>
-
-<!-- Dice Roller -->
-<div class="section">
-  <div class="section-title">Quick Roll</div>
-  <div class="dice-result" id="diceResult">—</div>
-  <div class="dice-bar">
-    <button class="dice-btn" onclick="roll(20,1,0)">d20</button>
-    <button class="dice-btn" onclick="roll(20,1,5)">Atk +5</button>
-    <button class="dice-btn" onclick="roll(8,1,0)">d8</button>
-    <button class="dice-btn" onclick="roll(6,4,0)">4d6</button>
-    <button class="dice-btn" onclick="roll(4,2,3)">Heal 2d4+3</button>
-    <button class="dice-btn" onclick="roll(4,1,0)">d4</button>
-    <button class="dice-btn" onclick="roll(8,2,3)">Cure 2d8+3</button>
-  </div>
-</div>
-
-<!-- Long Rest -->
-<button class="long-rest-btn" onclick="longRest()">🌙 Long Rest — Restore All</button>
-
-<!-- Detail Overlay -->
-<div class="detail-overlay" id="detailOverlay" onclick="hideDetail()">
-  <div class="detail-card" onclick="event.stopPropagation()">
-    <h2 id="detailTitle"></h2>
-    <div class="meta" id="detailMeta"></div>
-    <div id="detailBody"></div>
-    <div class="close-hint">tap outside to close</div>
-  </div>
-</div>
+<!-- Detail overlay -->
+<div class="ov" id="ov" onclick="hd()">
+<div class="dc" onclick="event.stopPropagation()">
+<h2 id="dT"></h2><div class="mt" id="dM"></div><div id="dB"></div><div class="ch">tap outside to close</div>
+</div></div>
 
 <script>
-// State
-let hp = 25;
-const maxHP = 31;
+let hp=25;const mx=31;
+function upHP(){document.getElementById('hpT').textContent=`${hp}/${mx}`;const p=hp/mx*100,f=document.getElementById('hpF');f.style.width=p+'%';f.style.background=p>50?'#44cc66':p>25?'#ccaa33':'#cc3344'}
+function chHP(d){hp=Math.max(0,Math.min(mx,hp+d));upHP();sv()}
+function tSP(e){e.classList.toggle('f');sv()}
+function tP(e){e.classList.toggle('f');sv()}
+function rl(s,c,m){let t=0,r=[];for(let i=0;i<c;i++){const v=Math.floor(Math.random()*s)+1;r.push(v);t+=v}t+=m;const ms=m?`+${m}`:'';const n=c===1&&s===20?(r[0]===20?' NAT 20! 🎉':r[0]===1?' NAT 1 💀':''):'';const e=document.getElementById('dR');e.textContent=`${t} [${r.join('+')}${ms}]${n}`;e.style.color=n.includes('20')?'#0f8':n.includes('1')?'#f44':'#ffd700'}
+function longRest(){hp=mx;upHP();document.querySelectorAll('.sp,.pip').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='🌙 Restored!';document.getElementById('dR').style.color='#0c8';sv()}
 
-function updateHP() {
-  document.getElementById('hpText').textContent = `${hp}/${maxHP}`;
-  const pct = (hp / maxHP) * 100;
-  const fill = document.getElementById('hpFill');
-  fill.style.width = pct + '%';
-  fill.style.background = pct > 50 ? '#44cc66' : pct > 25 ? '#ccaa33' : '#cc3344';
-}
-
-function changeHP(delta) {
-  hp = Math.max(0, Math.min(maxHP, hp + delta));
-  updateHP();
-  save();
-}
-
-function toggleSlot(el) { el.classList.toggle('filled'); save(); }
-function togglePip(el) { el.classList.toggle('filled'); save(); }
-
-function roll(sides, count, mod) {
-  let total = 0;
-  let rolls = [];
-  for (let i = 0; i < count; i++) {
-    const r = Math.floor(Math.random() * sides) + 1;
-    rolls.push(r);
-    total += r;
-  }
-  total += mod;
-  const modStr = mod ? `+${mod}` : '';
-  const natStr = count === 1 && sides === 20 ? (rolls[0] === 20 ? ' NAT 20! 🎉' : rolls[0] === 1 ? ' NAT 1... 💀' : '') : '';
-  document.getElementById('diceResult').textContent = `${total} [${rolls.join('+')}${modStr}]${natStr}`;
-  document.getElementById('diceResult').style.color = natStr.includes('20') ? '#00ff88' : natStr.includes('1') ? '#ff4444' : '#ffd700';
-}
-
-function longRest() {
-  hp = maxHP;
-  updateHP();
-  document.querySelectorAll('.slot-pip, .use-pip').forEach(p => p.classList.add('filled'));
-  document.getElementById('diceResult').textContent = '🌙 Fully restored!';
-  document.getElementById('diceResult').style.color = '#00cc88';
-  save();
-}
-
-// Detail descriptions
-const details = {
-  healingHands: {
-    title: '🤲 Healing Hands',
-    meta: 'Aasimar Racial · Magic Action · 1/Long Rest',
-    body: `<p>As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus (2d4). The creature regains Hit Points equal to the total rolled.</p><p>Once you use this trait, you can't use it again until you finish a Long Rest.</p>`
-  },
-  celestialRevelation: {
-    title: '✨ Celestial Revelation',
-    meta: 'Aasimar Racial · Bonus Action · 1 minute · 1/Long Rest',
-    body: `<p>As a Bonus Action, you can unleash your celestial nature. Choose one of three forms:</p>
-    <p><b>Heavenly Wings:</b> Spectral wings appear. Fly speed equal to walking speed.</p>
-    <p><b>Inner Radiance:</b> At end of each of your turns, you and allies within 10 ft regain HP equal to your CHA mod (1).</p>
-    <p><b>Necrotic Shroud:</b> Enemies within 10 ft must make CHA save (DC 11) or be Frightened of you until end of your next turn. Once per turn, deal extra necrotic damage = Prof Bonus (+2).</p>
-    <p>While transformed, once per turn you deal extra radiant damage equal to your Proficiency Bonus (+2) to one target when you deal damage.</p>`
-  },
-  channelDivinity: {
-    title: '🔆 Channel Divinity',
-    meta: 'Cleric Feature · Action · 1/Short or Long Rest',
-    body: `<p>Choose ONE when you use it:</p>
-    <p><b>Turn Undead:</b> Each undead within 30 ft that can see/hear you must make a WIS saving throw (DC 13). On fail, it is turned for 1 minute — must Dash away from you, can't willingly move within 30 ft of you.</p>
-    <p><b>Radiance of the Dawn (Light Domain):</b> As an Action, you present your holy symbol and any magical darkness within 30 ft is dispelled. Each hostile creature within 30 ft must make a CON saving throw (DC 13). On fail: 2d10 + 4 (Cleric level) radiant damage. On success: half damage. Doesn't affect allies!</p>
-    <p>Recharges on a Short or Long Rest.</p>`
-  },
-  wardingFlare: {
-    title: '💥 Warding Flare',
-    meta: 'Light Domain · Reaction · WIS mod (3)/Long Rest',
-    body: `<p>When you are attacked by a creature within 30 feet that you can see, you can use your Reaction to impose disadvantage on the attack roll, causing light to flare before the attacker.</p>
-    <p>An attacker that can't be Blinded is immune to this feature.</p>
-    <p>You can use this feature a number of times equal to your WIS modifier (3). You regain all expended uses on a Long Rest.</p>`
-  },
-  burningHands: {
-    title: '🔥 Burning Hands',
-    meta: '1st Level Evocation · V, S · Self (15 ft cone) · Instant',
-    body: `<p>A thin sheet of flames shoots forth from your fingertips. Each creature in a 15-foot cone must make a DEX saving throw (DC 13). On fail: 3d6 fire damage. On success: half damage.</p><p>The fire ignites any flammable objects in the area that aren't being worn or carried.</p><p><b>At Higher Levels:</b> +1d6 per slot above 1st.</p>`
-  },
-  faerieFire: {
-    title: '✨ Faerie Fire',
-    meta: '1st Level Evocation · V · Conc, 1 min · 60 ft (20 ft cube)',
-    body: `<p>Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast must succeed on a DEX saving throw (DC 13) or be outlined too.</p><p>For the duration, objects and affected creatures shed dim light in a 10-foot radius. Any attack roll against an affected creature or object has <b>advantage</b> if the attacker can see it, and the affected creature or object can't benefit from being invisible.</p><p><b>Great against invisible enemies in Icewind Dale!</b></p>`
-  },
-  flamingSphere: {
-    title: '🔴 Flaming Sphere',
-    meta: '2nd Level Evocation · V, S, M · Conc, 1 min · 60 ft',
-    body: `<p>A 5-foot-diameter sphere of fire appears in an unoccupied space within range. Any creature that ends its turn within 5 feet of the sphere must make a DEX saving throw (DC 13): 2d6 fire damage on fail, half on success.</p><p>As a <b>Bonus Action</b>, you can move the sphere up to 30 feet. If you ram it into a creature, that creature makes the save, and the sphere stops.</p><p><b>At Higher Levels:</b> +1d6 per slot above 2nd.</p><p><b>Tip:</b> Uses concentration, so can't pair with Bless or Faerie Fire. But Spiritual Weapon + Flaming Sphere = double bonus action value!</p>`
-  },
-  scorchingRay: {
-    title: '🔥🔥 Scorching Ray',
-    meta: '2nd Level Evocation · V, S · Action · 120 ft',
-    body: `<p>You create three rays of fire and hurl them at targets within range. You can hurl them at one target or several. Make a ranged spell attack (+5) for each ray. On hit: 2d6 fire damage per ray.</p><p><b>At Higher Levels:</b> +1 ray per slot above 2nd.</p><p><b>Max damage:</b> 3 × 2d6 = 6d6 (avg 21) fire damage if all three hit. Your biggest single-turn damage spell right now!</p>`
-  },
-  celestialResistance: {
-    title: '🛡️ Celestial Resistance',
-    meta: 'Aasimar Racial · Passive',
-    body: '<p>You have resistance to Necrotic damage and Radiant damage. When you take either damage type, it is halved.</p>'
-  },
-  lightBearer: {
-    title: '💡 Light Bearer',
-    meta: 'Aasimar Racial · Cantrip · At Will',
-    body: '<p>You know the Light cantrip. Charisma is your spellcasting ability for it. You can cast it at will without using a spell slot.</p>'
-  },
-  darkvision: {
-    title: '👁️ Darkvision',
-    meta: 'Aasimar Racial · Passive',
-    body: '<p>You can see in dim light within 60 feet as if it were bright light, and in darkness as if it were dim light. You discern colors in that darkness only as shades of gray.</p>'
-  },
-  sacredFlame: {
-    title: '🔥 Sacred Flame',
-    meta: 'Evocation Cantrip · V, S · 60 ft · Instant',
-    body: '<p>Flame-like radiance descends on a creature you can see within range. The target must succeed on a DEX saving throw (DC 13) or take 1d8 radiant damage. The target gains no benefit from cover for this save.</p><p>Damage increases at 5th level (2d8).</p>'
-  },
-  spareTheDying: {
-    title: '🫀 Spare the Dying',
-    meta: 'Necromancy Cantrip · V, S · Touch · Instant',
-    body: '<p>You touch a living creature that has 0 HP. The creature becomes stable. This spell has no effect on undead or constructs.</p>'
-  },
-  guidance: {
-    title: '🙏 Guidance',
-    meta: 'Divination Cantrip · V, S · Touch · Conc, 1 min',
-    body: '<p>You touch one willing creature. Once before the spell ends, the target can roll a d4 and add it to one ability check of its choice. It can roll the die before or after making the check.</p>'
-  },
-  tollTheDead: {
-    title: '🔔 Toll the Dead',
-    meta: 'Necromancy Cantrip · V, S · 60 ft · Instant',
-    body: '<p>You point at one creature you can see within range, and the sound of a dolorous bell fills the air around it. The target must succeed on a WIS saving throw (DC 13) or take 1d8 necrotic damage. If the target is missing any HP, it takes 1d12 necrotic damage instead.</p>'
-  },
-  light: {
-    title: '💡 Light',
-    meta: 'Evocation Cantrip · V, M · Touch · 1 hour',
-    body: '<p>You touch one object no larger than 10 feet in any dimension. The object sheds bright light in a 20-foot radius and dim light for an additional 20 feet. The light can be colored as you like.</p><p>Covering the object blocks the light. The spell ends if you cast it again or dismiss it as an Action.</p>'
-  },
-  healingWord: {
-    title: '💚 Healing Word',
-    meta: '1st Level Evocation · V · Bonus Action · 60 ft',
-    body: '<p>A creature of your choice that you can see within range regains HP equal to 2d4 + your WIS modifier (+3).</p><p><b>At Higher Levels:</b> +1d4 per slot above 1st.</p>'
-  },
-  cureWounds: {
-    title: '💚 Cure Wounds',
-    meta: '1st Level Evocation · V, S · Action · Touch',
-    body: '<p>A creature you touch regains HP equal to 2d8 + your WIS modifier (+3).</p><p><b>At Higher Levels:</b> +2d8 per slot above 1st.</p>'
-  },
-  bless: {
-    title: '🙌 Bless',
-    meta: '1st Level Enchantment · V, S, M · Conc, 1 min · 30 ft',
-    body: '<p>You bless up to three creatures of your choice within range. Whenever a target makes an attack roll or saving throw before the spell ends, it can roll a d4 and add it to the result.</p><p><b>At Higher Levels:</b> +1 creature per slot above 1st.</p>'
-  },
-  shieldOfFaith: {
-    title: '🛡️ Shield of Faith',
-    meta: '1st Level Abjuration · V, S, M · Bonus Action · Conc, 10 min',
-    body: '<p>A shimmering field appears around a creature of your choice within 60 feet, granting it a +2 bonus to AC for the duration.</p>'
-  },
-  guidingBolt: {
-    title: '⚡ Guiding Bolt',
-    meta: '1st Level Evocation · V, S · Action · 120 ft',
-    body: '<p>A flash of light streaks toward a creature of your choice within range. Make a ranged spell attack (+5). On hit: 4d6 radiant damage, and the next attack roll made against this target before the end of your next turn has advantage (the target glimmers with mystic dim light).</p><p><b>At Higher Levels:</b> +1d6 per slot above 1st.</p>'
-  },
-  spiritualWeapon: {
-    title: '⚔️ Spiritual Weapon',
-    meta: '2nd Level Evocation · V, S · Bonus Action · 60 ft · 1 min',
-    body: '<p>You create a floating, spectral weapon within range that lasts for the duration. When you cast this spell, you can make a melee spell attack (+5) against a creature within 5 ft of the weapon: 1d8 + 3 force damage.</p><p>As a Bonus Action on subsequent turns, you can move the weapon up to 20 ft and repeat the attack.</p><p><b>Not concentration!</b> Great paired with Bless or Spirit Guardians.</p><p><b>At Higher Levels:</b> +1d8 per 2 slot levels above 2nd.</p>'
-  },
-  holdPerson: {
-    title: '✋ Hold Person',
-    meta: '2nd Level Enchantment · V, S, M · Conc, 1 min · 60 ft',
-    body: '<p>Choose a humanoid you can see within range. The target must succeed on a WIS saving throw (DC 13) or be Paralyzed for the duration.</p><p>At the end of each of its turns, the target makes another WIS save. On success, the spell ends.</p><p><b>Paralyzed:</b> Auto-fail STR/DEX saves. Attacks have advantage. Melee hits within 5 ft are auto-crits!</p><p><b>At Higher Levels:</b> +1 target per slot above 2nd.</p>'
-  },
+const D={
+healHands:{t:'🤲 Healing Hands',m:'Aasimar · Magic Action · 1/Long Rest',b:'<p>Touch a creature, roll 2d4 (Prof Bonus). They regain that many HP.</p>'},
+celRev:{t:'✨ Celestial Revelation',m:'Aasimar · Bonus Action · 1 min · 1/Long Rest',b:'<p>Choose one form:</p><p><b>Heavenly Wings:</b> Fly speed = walk speed.</p><p><b>Inner Radiance:</b> End of your turns, you + allies in 10ft heal CHA mod (1) HP.</p><p><b>Necrotic Shroud:</b> Enemies in 10ft CHA save (DC 11) or Frightened. Once/turn: +2 necrotic dmg.</p><p>While active: once/turn +2 radiant damage to one target.</p>'},
+chanDiv:{t:'🔆 Channel Divinity',m:'Action · 1/Short Rest',b:'<p><b>Turn Undead:</b> Undead in 30ft WIS save (DC 13) or turned 1 min.</p><p><b>Radiance of the Dawn:</b> Dispel magical darkness in 30ft. Hostiles in 30ft CON save (DC 13): <b>2d10+4 radiant</b>. Half on save. Allies unaffected!</p>'},
+wardFlare:{t:'💥 Warding Flare',m:'Light Domain · Reaction · 3/Long Rest',b:'<p>When attacked by creature within 30ft you can see: <b>Reaction to impose disadvantage</b> on the attack roll. Attacker immune if can\'t be Blinded.</p>'},
+celRes:{t:'🛡️ Celestial Resistance',m:'Passive',b:'<p>Resistance to necrotic and radiant damage (half damage).</p>'},
+darkv:{t:'👁️ Darkvision',m:'Passive · 60 ft',b:'<p>See in dim light as bright, darkness as dim. Shades of gray only in darkness.</p>'},
+guidance:{t:'🙏 Guidance',m:'Cantrip · V,S · Touch · Conc 1 min',b:'<p>Target adds 1d4 to one ability check before spell ends.</p>'},
+light:{t:'💡 Light',m:'Cantrip · V,M · Touch · 1 hr',b:'<p>Object sheds bright light 20ft, dim 20ft more. Dismiss as Action.</p>'},
+resistance:{t:'🛡️ Resistance',m:'Cantrip · V,S · Touch · Conc 1 min',b:'<p>Target adds 1d4 to one saving throw before spell ends.</p>'},
+sacFlame:{t:'🔥 Sacred Flame',m:'Cantrip · V,S · 60ft',b:'<p>DEX save (DC 13) or 1d8 radiant. No benefit from cover. 2d8 at level 5.</p>'},
+tollDead:{t:'🔔 Toll the Dead',m:'Cantrip · V,S · 60ft',b:'<p>WIS save (DC 13) or 1d8 necrotic. <b>1d12 if target is missing HP!</b> 2d8/2d12 at level 5.</p>'},
+bane:{t:'😈 Bane',m:'1st · V,S,M · 30ft · CHA 13 · Conc 1 min',b:'<p>Up to 3 creatures CHA save or subtract 1d4 from attack rolls and saves. Great debuff!</p>'},
+bless:{t:'🙌 Bless',m:'1st · V,S,M · 30ft · Conc 1 min',b:'<p>Up to 3 creatures add 1d4 to attack rolls and saving throws.</p><p><b>Upcast 2nd:</b> +1 target (4 total).</p>'},
+burnHands:{t:'🔥 Burning Hands',m:'1st · V,S · Self (15ft cone) · DEX 13',b:'<p>3d6 fire, half on save. Ignites flammable objects.</p><p><b>Upcast 2nd:</b> 4d6.</p>'},
+faerie:{t:'✨ Faerie Fire',m:'1st · V · 60ft (20ft cube) · DEX 13 · Conc 1 min',b:'<p>Creatures that fail outlined in light. Attacks against them have <b>advantage</b>. Can\'t benefit from invisibility.</p><p><b>Great in Icewind Dale against invisible/hidden enemies!</b></p>'},
+guidBolt:{t:'⚡ Guiding Bolt',m:'1st · V,S · 120ft · +5 to hit',b:'<p>4d6 radiant. Next attack against target has <b>advantage</b>.</p><p><b>Upcast 2nd:</b> 5d6.</p>'},
+inflict:{t:'💀 Inflict Wounds',m:'1st · V,S · Touch · +5 to hit',b:'<p>2d10 necrotic on hit. Highest single-target 1st level spell!</p><p><b>Upcast 2nd:</b> 3d10. (avg 16.5!)</p>'},
+shield:{t:'🛡️ Shield of Faith',m:'1st · V,S,M · BA · 60ft · Conc 10 min',b:'<p>+2 AC to target for duration. Cast as Bonus Action!</p>'},
+prayer:{t:'💚 Prayer of Healing',m:'2nd · V · 10 min · 30ft',b:'<p>Up to 6 creatures regain 2d8 HP each. <b>Out of combat only</b> (10 min cast time).</p>'},
+scorchRay:{t:'🔥🔥 Scorching Ray',m:'2nd · V,S · 120ft · +5 each ray',b:'<p>3 rays, each 2d6 fire. Can target same or different creatures. <b>Max 6d6 (avg 21) on one target!</b></p><p>Your biggest damage spell right now.</p>'},
+seeInvis:{t:'👁️ See Invisibility',m:'2nd · V,S,M · Self · 1 hr · No concentration!',b:'<p>See invisible creatures and objects. Also see into the Ethereal Plane. <b>No concentration!</b> Great pre-buff.</p>'},
+spirWeap:{t:'⚔️ Spiritual Weapon',m:'2nd · V,S · BA · 60ft · 1 min · NO concentration',b:'<p>Spectral weapon appears. Melee spell attack +5: 1d8+3 force.</p><p>Bonus Action each turn: move 20ft + attack again.</p><p><b>Not concentration!</b> Pair with Bless, Faerie Fire, or (at level 5) Spirit Guardians!</p>'},
+bane2:{t:'😈 Bane (upcast 2nd)',m:'2nd slot · +1 target (4 total)',b:'<p>Same as Bane but affects up to 4 creatures.</p>'},
+bless2:{t:'🙌 Bless (upcast 2nd)',m:'2nd slot · +1 target (4 total)',b:'<p>Same as Bless but affects up to 4 creatures.</p>'},
+burn2:{t:'🔥 Burning Hands (upcast 2nd)',m:'2nd slot · 4d6 fire',b:'<p>Same cone, 4d6 instead of 3d6.</p>'},
+guid2:{t:'⚡ Guiding Bolt (upcast 2nd)',m:'2nd slot · 5d6 radiant',b:'<p>Same as Guiding Bolt, 5d6 radiant + advantage on next attack.</p>'},
+inflict2:{t:'💀 Inflict Wounds (upcast 2nd)',m:'2nd slot · 3d10 necrotic',b:'<p>3d10 = avg 16.5. Massive single-target damage at touch range.</p>'},
 };
 
-function showDetail(key) {
-  const d = details[key];
-  if (!d) return;
-  document.getElementById('detailTitle').textContent = d.title;
-  document.getElementById('detailMeta').textContent = d.meta;
-  document.getElementById('detailBody').innerHTML = d.body;
-  document.getElementById('detailOverlay').classList.add('show');
-}
+function sd(k){const d=D[k];if(!d)return;document.getElementById('dT').textContent=d.t;document.getElementById('dM').textContent=d.m;document.getElementById('dB').innerHTML=d.b;document.getElementById('ov').classList.add('show')}
+function hd(){document.getElementById('ov').classList.remove('show')}
 
-function hideDetail() {
-  document.getElementById('detailOverlay').classList.remove('show');
-}
+function sv(){const s=[...document.querySelectorAll('.sp')].map(p=>p.classList.contains('f'));const p=[...document.querySelectorAll('.pip')].map(p=>p.classList.contains('f'));localStorage.setItem('korin',JSON.stringify({hp,s,p}))}
+function ld(){const r=localStorage.getItem('korin');if(!r)return;try{const d=JSON.parse(r);if(d.hp!==undefined)hp=d.hp;if(d.s)document.querySelectorAll('.sp').forEach((p,i)=>{if(d.s[i]!==undefined)p.classList.toggle('f',d.s[i])});if(d.p)document.querySelectorAll('.pip').forEach((p,i)=>{if(d.p[i]!==undefined)p.classList.toggle('f',d.p[i])})}catch(e){}}
 
-// Save/Load state
-function save() {
-  const slots = [...document.querySelectorAll('.slot-pip')].map(p => p.classList.contains('filled'));
-  const pips = [...document.querySelectorAll('.use-pip')].map(p => p.classList.contains('filled'));
-  localStorage.setItem('korin', JSON.stringify({ hp, slots, pips }));
-}
-
-function load() {
-  const raw = localStorage.getItem('korin');
-  if (!raw) return;
-  try {
-    const data = JSON.parse(raw);
-    if (data.hp !== undefined) hp = data.hp;
-    if (data.slots) {
-      document.querySelectorAll('.slot-pip').forEach((p, i) => {
-        if (data.slots[i] !== undefined) p.classList.toggle('filled', data.slots[i]);
-      });
-    }
-    if (data.pips) {
-      document.querySelectorAll('.use-pip').forEach((p, i) => {
-        if (data.pips[i] !== undefined) p.classList.toggle('filled', data.pips[i]);
-      });
-    }
-  } catch(e) {}
-}
-
-// Init
-load();
-updateHP();
+ld();upHP();
 </script>
 </body>
 </html>

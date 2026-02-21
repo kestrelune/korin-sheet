@@ -220,12 +220,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
       <div class="tt"><h3>💀 Inflict Wounds</h3><div class="mt">1st · V,S · Touch · +5</div><p>2d10 necrotic. Highest 1st-level single target!</p><p><b>Upcast 2nd:</b> 3d10 (avg 16.5).</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><button class="lp-btn" onclick="event.stopPropagation();spend(this,2)">2nd</button><span class="lp-info"></span></div>
     </div>
-    <div class="a castable" data-spell="shield" onclick="castSpell(this)">
-      <div class="top"><span class="ico">🛡️</span><span class="n">Shield of Faith</span></div>
-      <div class="bot"><span class="m">+2 AC</span><span class="conc">CONC</span></div>
-      <div class="tt"><h3>🛡️ Shield of Faith</h3><div class="mt">1st · V,S,M · BA · 60ft · Conc 10 min</div><p>+2 AC to target. <b>Bonus action to cast.</b></p></div>
-      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><span class="lp-info"></span></div>
-    </div>
   </div>
 
   <div class="sh2">— 2nd Level Spells —</div>
@@ -278,10 +272,16 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
       <div class="top"><span class="ico">⚔️</span><span class="n">SW Atk (subsequent)</span><span class="m" style="margin-left:auto">20ft move + d8+3</span></div>
       <div class="tt"><h3>⚔️ Spiritual Weapon Attack</h3><div class="mt">Bonus Action each turn (already cast)</div><p>Move weapon 20ft + melee spell attack +5: 1d8+3 force. Free damage every turn!</p></div>
     </div>
+    <div class="a castable" data-spell="shield" onclick="castSpell(this)">
+      <div class="top"><span class="ico">🛡️</span><span class="n">Shield of Faith</span></div>
+      <div class="bot"><span class="m">+2 AC</span><span class="conc">CONC</span></div>
+      <div class="tt"><h3>🛡️ Shield of Faith</h3><div class="mt">1st · V,S,M · BA · 60ft · Conc 10 min</div><p>+2 AC to target. Concentration — can't stack with Bless/Bane/Faerie Fire.</p></div>
+      <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><span class="lp-info"></span></div>
+    </div>
     <div class="a">
       <div class="top"><span class="ico">✨</span><span class="n">Celestial Rev.</span></div>
-      <div class="bot"><span class="m">1min · +2 dmg</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
-      <div class="tt"><h3>✨ Celestial Revelation</h3><div class="mt">Bonus Action · 1 min · 1/Long Rest</div><p><b>Heavenly Wings:</b> Fly speed = walk speed.</p><p><b>Inner Radiance:</b> End of turn, you + allies in 10ft heal 1 HP.</p><p><b>Necrotic Shroud:</b> 10ft CHA save or Frightened. +2 necrotic once/turn.</p><p>All forms: once/turn +2 radiant damage.</p></div>
+      <div class="bot"><span class="m">1min · choose form</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="tt"><h3>✨ Celestial Revelation</h3><div class="mt">Bonus Action · 1 min · 1/Long Rest</div><p>Pick one form. <b>ALL forms</b> grant once/turn <b>+2 radiant</b> on any damage you deal.</p><p>🕊️ <b>Wings:</b> Gain fly speed = walk speed. +2 radiant/turn.</p><p>💛 <b>Inner Radiance:</b> End of your turn, you + allies in 10ft heal 1 HP. +2 radiant/turn.</p><p>💀 <b>Necrotic Shroud:</b> 10ft enemies CHA save (DC 11) or Frightened 1 turn. Once/turn <b>+2 necrotic AND +2 radiant = +4 total</b>. Best damage pick.</p></div>
     </div>
   </div>
 

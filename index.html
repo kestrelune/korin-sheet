@@ -253,12 +253,12 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
   <div class="card-grid">
     <div class="a">
       <div class="top"><span class="ico">🤲</span><span class="n">Healing Hands</span></div>
-      <div class="bot"><span class="m">2d4</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="bot"><span class="m">2d4</span><div class="pips"><div class="pip f" data-ability="healHands" onclick="event.stopPropagation();tP(this)"></div></div></div>
       <div class="tt"><h3>🤲 Healing Hands</h3><div class="mt">Magic Action · Touch · 1/Long Rest</div><p>Roll 2d4. Target regains that many HP.</p></div>
     </div>
     <div class="a">
       <div class="top"><span class="ico">🔆</span><span class="n">Channel Divinity</span></div>
-      <div class="bot"><span class="m">Turn / Radiance</span><div class="pips"><div class="pip sr f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="bot"><span class="m">Turn / Radiance</span><div class="pips"><div class="pip sr f" data-ability="chanDiv" onclick="event.stopPropagation();tP(this)"></div></div></div>
       <div class="tt"><h3>🔆 Channel Divinity</h3><div class="mt">Action · 1/Short Rest</div><p><b>Turn Undead:</b> 30ft WIS save or turned 1 min.</p><p><b>Radiance of the Dawn:</b> 30ft CON save: <b>2d10+4 radiant</b>. Half on save. <b>Allies unaffected!</b></p></div>
     </div>
   </div>
@@ -281,7 +281,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
     </div>
     <div class="a">
       <div class="top"><span class="ico">✨</span><span class="n">Celestial Rev.</span></div>
-      <div class="bot"><span class="m">1min · choose form</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="bot"><span class="m">1min · choose form</span><div class="pips"><div class="pip f" data-ability="celRev" onclick="event.stopPropagation();tP(this)"></div></div></div>
       <div class="tt"><h3>✨ Celestial Revelation</h3><div class="mt">Bonus Action · 1 min · 1/Long Rest</div><p>Pick one form. <b>ALL forms</b> grant once/turn <b>+2 radiant</b> on any damage you deal.</p><p>🕊️ <b>Wings:</b> Gain fly speed = walk speed. +2 radiant/turn.</p><p>💛 <b>Inner Radiance:</b> End of your turn, you + allies in 10ft heal 1 HP. +2 radiant/turn.</p><p>💀 <b>Necrotic Shroud:</b> 10ft enemies CHA save (DC 11) or Frightened 1 turn. Once/turn <b>+2 necrotic AND +2 radiant = +4 total</b>. Best damage pick.</p></div>
     </div>
   </div>
@@ -290,7 +290,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
   <div class="card-grid">
     <div class="a wide">
-      <div class="top"><span class="ico">💥</span><span class="n">Warding Flare</span><span class="m" style="margin-left:auto">Disadv on atk · 30ft</span><div class="pips"><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" onclick="event.stopPropagation();tP(this)"></div></div></div>
+      <div class="top"><span class="ico">💥</span><span class="n">Warding Flare</span><span class="m" style="margin-left:auto">Disadv on atk · 30ft</span><div class="pips"><div class="pip f" data-ability="wardFlare" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" data-ability="wardFlare" onclick="event.stopPropagation();tP(this)"></div><div class="pip f" data-ability="wardFlare" onclick="event.stopPropagation();tP(this)"></div></div></div>
       <div class="tt"><h3>💥 Warding Flare</h3><div class="mt">Reaction · 3/Long Rest</div><p>When attacked by creature within 30ft: <b>impose disadvantage</b> on attack roll. Immune if attacker can't be Blinded.</p></div>
     </div>
   </div>
@@ -382,7 +382,7 @@ let hp=25;const mx=31;
 function upHP(){document.getElementById('hpT').textContent=`${hp}/${mx}`;const p=hp/mx*100,f=document.getElementById('hpF');f.style.width=p+'%';f.style.background=p>50?'#44cc66':p>25?'#ccaa33':'#cc3344'}
 function chHP(d){hp=Math.max(0,Math.min(mx,hp+d));upHP();sv()}
 function tSP(e){e.classList.toggle('f');sv()}
-function tP(e){e.classList.toggle('f');sv()}
+function tP(e){e.classList.toggle('f');sv();updateExhausted()}
 function rl(s,c,m){let t=0,r=[];for(let i=0;i<c;i++){const v=Math.floor(Math.random()*s)+1;r.push(v);t+=v}t+=m;const ms=m?`+${m}`:'';const n=c===1&&s===20?(r[0]===20?' NAT 20! 🎉':r[0]===1?' NAT 1 💀':''):'';const e=document.getElementById('dR');e.textContent=`${t} [${r.join('+')}${ms}]${n}`;e.style.color=n.includes('20')?'#0f8':n.includes('1')?'#f44':'#ffd700'}
 
 // Spell casting: click to open level picker, pick level to spend slot
@@ -463,17 +463,27 @@ document.addEventListener('click',e=>{
   }
 });
 
-// Disable spells when no valid slots remain
+// Disable spells/abilities when no valid slots/uses remain
 function updateExhausted(){
+  // Spell slots
   document.querySelectorAll('.a.castable[data-min-lvl]').forEach(card=>{
     const min=parseInt(card.dataset.minLvl);
-    // Can cast if ANY slot at min level or above is filled
     let canCast=false;
     for(let lvl=min;lvl<=2;lvl++){
       if(document.querySelector(`.sp[data-lvl="${lvl}"].f`)){canCast=true;break}
     }
     card.classList.toggle('exhausted',!canCast);
   });
+  // Pip-based abilities: group pips by data-ability, dim parent card if all spent
+  const abilities={};
+  document.querySelectorAll('.pip[data-ability]').forEach(pip=>{
+    const id=pip.dataset.ability;
+    if(!abilities[id])abilities[id]={any:false,card:pip.closest('.a')};
+    if(pip.classList.contains('f'))abilities[id].any=true;
+  });
+  for(const id in abilities){
+    abilities[id].card.classList.toggle('exhausted',!abilities[id].any);
+  }
 }
 
 function shortRest(){document.querySelectorAll('.pip.sr').forEach(p=>p.classList.add('f'));document.getElementById('dR').textContent='⏳ Short Rest!';document.getElementById('dR').style.color='#4466aa';sv()}

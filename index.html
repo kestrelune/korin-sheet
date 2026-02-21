@@ -205,7 +205,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
     <div class="a castable" data-spell="faerie" onclick="castSpell(this)">
       <div class="top"><span class="ico">✨</span><span class="n">Faerie Fire</span></div>
       <div class="bot"><span class="m">Adv atks · 20ft</span><span class="conc">CONC</span></div>
-      <div class="tt"><h3>✨ Faerie Fire</h3><div class="mt">1st · V · 60ft 20ft cube · DEX 13 · Conc 1 min</div><p>Failed saves: attacks have <b>advantage</b>, can't be invisible.</p></div>
+      <div class="tt"><h3>✨ Faerie Fire</h3><div class="mt">1st · V · 60ft · 20ft cube · DEX 13 · Conc 1 min</div><p>Failed saves: outlined in light. <b>All attacks against them have advantage.</b> Can't be invisible.</p><p>No damage — pure support. But advantage for the <b>whole party</b> for up to 10 rounds is massive action economy.</p><p>💎 <b>Icewind Dale MVP:</b> Counters invisible stalkers, blizzard obscurement, and hidden enemies.</p></div>
       <div class="lvl-pick"><span class="lp-label">Cast at:</span><button class="lp-btn" onclick="event.stopPropagation();spend(this,1)">1st</button><span class="lp-info"></span></div>
     </div>
     <div class="a castable" data-spell="guidBolt" onclick="castSpell(this)">
@@ -365,10 +365,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans
 
   <div class="sh" style="margin-top:6px">📝 Notes</div>
   <div style="font-size:11px;color:var(--dim);line-height:1.6">
-    <div>• Shield of Faith is a <b style="color:var(--ba)">Bonus Action</b> to cast</div>
-    <div>• Spiritual Weapon: <b style="color:var(--gold)">NOT concentration</b></div>
-    <div>• Toll the Dead: d12 if target hurt</div>
-    <div>• Faerie Fire: great vs invisible</div>
+    <div>• Spiritual Weapon: <b style="color:var(--gold)">NOT concentration</b> — stack with Bless/Faerie Fire!</div>
   </div>
 </div>
 
